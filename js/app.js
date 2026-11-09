@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  var TEMPO = 30; // segundos por questão objetiva
+  var TEMPO = 60; // segundos por questão objetiva
   var app = document.getElementById('app');
   var TEMAS = window.TEMAS;
   var QUESTOES = window.QUESTOES;
@@ -291,7 +291,7 @@
       t += '<rect class="' + (i % 2 ? 'vazio' : 'vazio') + '" x="' + x.toFixed(2) + '" y="' + y + '" width="' + wi.toFixed(2) + '" height="' + (i % 5 === 0 ? h : h - 5) + '"/>';
     }
     var nums = '';
-    for (var k = 0; k <= TEMPO; k += 5) nums += '<text x="' + (x0 + (larg * k) / TEMPO).toFixed(1) + '" y="32" text-anchor="middle">' + k + '</text>';
+    for (var k = 0; k <= TEMPO; k += 10) nums += '<text x="' + (x0 + (larg * k) / TEMPO).toFixed(1) + '" y="32" text-anchor="middle">' + k + '</text>';
     return '<svg viewBox="0 0 ' + w + ' 36" preserveAspectRatio="none" aria-hidden="true">' + t +
       '<rect id="esc-cheio" class="cheio" x="' + x0 + '" y="' + y + '" width="' + larg + '" height="' + h + '"/>' + nums + '</svg>';
   }

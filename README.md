@@ -6,7 +6,7 @@ Abra `index.html` no navegador (funciona offline; as fontes vêm do Google Fonts
 
 ## Como funciona
 - **Início:** escolha um tema do edital, **qualquer tema** ou **questão discursiva**.
-- **Objetivas:** cada questão aparece em texto com **contagem regressiva de 30 s**. Ao responder (ou esgotar o tempo), o treinador informa **em texto e em áudio** (voz pt-BR do navegador) se a resposta está certa ou errada e lê a justificativa. Depois, **prosseguir** ou **encerrar**.
+- **Objetivas:** cada questão aparece em texto com **contagem regressiva de 60 s**. Ao responder (ou esgotar o tempo), o treinador informa **em texto e em áudio** (voz pt-BR do navegador) se a resposta está certa ou errada e lê a justificativa. Depois, **prosseguir** ou **encerrar**.
 - **Discursivas:** texto motivador, comando e quesitos com pontuação; após enviar, mostra o padrão de resposta, os termos-chave encontrados e uma nota sugerida ajustável por quesito.
 - **Encerrar:** mostra o desempenho: aproveitamento, acertos, erros, em branco, nota líquida no método Cebraspe (certo − errado), resultado por tema e revisão dos erros.
 - Atalhos: `C`/`E` (Certo/Errado), `A`–`E` (múltipla escolha), `Enter` (próxima), `Esc` (encerrar).
