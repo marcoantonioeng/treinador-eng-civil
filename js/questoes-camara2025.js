@@ -8,11 +8,20 @@
  * e estatística) ficam de fora porque o edital do cargo 6 não cobra essa disciplina.
  * O gabarito é o oficial. As justificativas são do treinador, com base na lei e na doutrina.
  *
- * Quatro itens inéditos que repetiam assuntos agora cobertos por itens reais saem do banco
- * (NBA09, NBA16, NBA17, NBA21).
+ * Conhecimentos Específicos do cargo 1 (Processo Legislativo e Gestão, CD-AL-011), caderno 167_CDNS_001_01,
+ * gabarito definitivo (anulados 93, 97, 115, 117, 126, 155 e 166; item 167 alterado de E para C).
+ * Entram só os 36 itens cujo assunto está nos Conhecimentos Básicos do cargo 6 (edital, 14.2.3):
+ * Regimento Interno nos artigos cobrados (91–101), Regimento Comum (102–103), Constituição — Poder
+ * Legislativo e servidores (106–124, exceto os de funções essenciais à justiça, segurança pública,
+ * procedimento regimental fora dos artigos do edital e orçamento), gestão de riscos (139) e TI e dados
+ * (168–180, exceto o 167, sobre Windows, que o edital não cobra). Ficam de fora Código de Ética, teoria
+ * política, atualidades, gestão organizacional e hardware.
+ *
+ * Itens inéditos que repetiam assuntos agora cobertos por itens reais saem do banco
+ * (NBA09, NBA16, NBA17, NBA21, NBC05, NBC06, NBC32 e NBT21).
  */
 (function () {
-  var SAI = { NBA09: 1, NBA16: 1, NBA17: 1, NBA21: 1 };
+  var SAI = { NBA09: 1, NBA16: 1, NBA17: 1, NBA21: 1, NBC05: 1, NBC06: 1, NBC32: 1, NBT21: 1 };
   for (var i = window.QUESTOES.length - 1; i >= 0; i--) {
     if (SAI[window.QUESTOES[i].id]) window.QUESTOES.splice(i, 1);
   }
@@ -224,4 +233,111 @@
     'Errado. Com personalidade de direito público, o consórcio constitui associação pública (art. 6.º, I e § 1.º, da Lei 11.107/2005), espécie de autarquia, e não empresa pública. Ele integra, sim, a administração indireta de todos os consorciados.');
   ce(90, 'administrativo', cMud, 'Entre as prerrogativas das agências reguladoras, que são autarquias em regime especial, inclui-se a estabilidade de seus dirigentes durante o mandato.', 'C',
     'Certo. Os dirigentes têm mandato fixo e só perdem o cargo nas hipóteses legais (Lei 9.986/2000, art. 9.º; Lei 13.848/2019). Essa estabilidade garante a autonomia da agência.');
+})();
+
+/* ===== Câmara 2025 · Conhecimentos Específicos do cargo 1 (só o que o edital do cargo 6 cobra) ===== */
+(function () {
+  var Q = window.QUESTOES;
+  var F = 'Câmara dos Deputados 2025 · Cebraspe · Conhecimentos Específicos (cargo 1) · item ';
+  function ce(n, tema, ctx, enun, gab, just) {
+    Q.push({ id: 'CD25E' + n, fonte: F + n, tema: tema, tipo: 'CE', contexto: ctx || '', enunciado: enun, gabarito: gab, justificativa: just, figura: null });
+  }
+
+  /* ----- Regimento Interno da Câmara ----- */
+  var cBloco = 'Julgue o item com base no que dispõe o Regimento Interno da Câmara dos Deputados em relação aos blocos parlamentares.';
+  ce(91, 'constitucional', cBloco, 'Caso um deputado se desligue do partido que forma um bloco parlamentar e seu desligamento reduza a quantidade de membros do bloco a um número inferior ao mínimo necessário para a sua constituição, tal bloco permanecerá existindo somente até o final da legislatura.', 'E',
+    'Errado. Pelo art. 12 do RICD, o bloco precisa ter ao menos três centésimos dos membros da Câmara. Se um desligamento o deixa abaixo desse mínimo, ele se extingue, e não sobrevive até o fim da legislatura.');
+  ce(92, 'constitucional', cBloco, 'Se dois partidos se coligarem para a formação de um bloco parlamentar, suas lideranças perdem suas atribuições, mas não suas prerrogativas.', 'E',
+    'Errado. O art. 12 do RICD diz que as lideranças dos partidos que se coligam em bloco perdem suas atribuições e prerrogativas regimentais. A liderança passa a ser a do bloco.');
+
+  var cOrg = 'No que diz respeito às atribuições dos órgãos da Câmara dos Deputados, julgue o item.';
+  ce(94, 'constitucional', cOrg, 'Cabe ao presidente da Câmara designar a ordem do dia das sessões, segundo a agenda mensal, ressalvadas as alterações permitidas pelo Regimento Interno da Câmara dos Deputados.', 'C',
+    'Certo. É atribuição do Presidente quanto às sessões (art. 17, I, do RICD): designar a Ordem do Dia na conformidade da agenda mensal, ressalvadas as alterações permitidas pelo Regimento.');
+  ce(95, 'constitucional', cOrg, 'É atribuição do presidente da Câmara promulgar, juntamente com o presidente do Senado Federal, emendas à Constituição Federal.', 'E',
+    'Errado. As emendas constitucionais são promulgadas pelas Mesas da Câmara e do Senado (art. 60, § 3.º, da CF). No RICD, essa competência está entre as da Mesa (art. 15), não do Presidente isoladamente.');
+  ce(96, 'constitucional', cOrg, 'É atribuição exclusiva da mesa da Câmara convidar a se retirar do plenário deputado que esteja perturbando a ordem dos trabalhos durante uma sessão.', 'E',
+    'Errado. Convidar o deputado a retirar-se do recinto do Plenário quando perturbar a ordem é atribuição do Presidente na direção das sessões (art. 17, I, do RICD), e não da Mesa.');
+  ce(98, 'constitucional', cOrg, 'Constitui atribuição do presidente da Câmara organizar, ouvido o colégio de líderes, a agenda com a previsão das proposições a serem apreciadas no mês subsequente, para distribuição aos deputados.', 'C',
+    'Certo. O art. 17, I, do RICD atribui ao Presidente organizar, ouvido o Colégio de Líderes, a agenda com as proposições a serem apreciadas no mês seguinte, para distribuição aos deputados.');
+
+  var cCom = 'No que se refere às comissões da Câmara dos Deputados, julgue o item.';
+  ce(99, 'constitucional', cCom, 'É parte dos poderes das comissões permanentes exercer a fiscalização e o controle dos atos de autarquias do Poder Executivo federal.', 'C',
+    'Certo. O art. 24 do RICD dá às comissões permanentes o acompanhamento, a fiscalização e o controle dos atos do Poder Executivo, incluídos os da administração indireta, da qual as autarquias fazem parte (art. 49, X, da CF).');
+  ce(100, 'constitucional', cCom, 'Uma comissão permanente tem o poder de convocar ministros de Estado e de encaminhar a eles, através da mesa, pedidos escritos de informação.', 'C',
+    'Certo. A comissão pode convocar ministro de Estado (art. 58, § 2.º, III, da CF) e encaminhar, por meio da Mesa, pedidos escritos de informação (art. 24 do RICD).');
+  ce(101, 'constitucional', cCom, 'Uma comissão permanente não dispõe da atribuição de propor a sustação dos atos normativos do Poder Executivo federal que exorbitem do poder regulamentar ou dos limites de delegação legislativa.', 'E',
+    'Errado. O art. 24 do RICD inclui entre as competências das comissões propor a sustação desses atos, elaborando o respectivo projeto de decreto legislativo (art. 49, V, da CF).');
+
+  var cRc = 'Acerca do Regimento Comum do Congresso Nacional, julgue o item.';
+  ce(102, 'constitucional', cRc, 'Em uma votação por processo simbólico em sessão do Congresso Nacional, o pronunciamento de um líder não tem o condão de representar o voto de seus liderados presentes.', 'E',
+    'Errado. No Regimento Comum, nas votações simbólicas o voto dos líderes representa o de seus liderados presentes, que podem declarar voto em sentido diverso.');
+  ce(103, 'constitucional', cRc, 'O Congresso Nacional poderá ter sessões secretas, desde que, na proposta de sua realização, esteja expressamente definida sua finalidade e que esta seja plenamente divulgada.', 'E',
+    'Errado. Sessões secretas são possíveis, mas a lógica é a do sigilo: a finalidade deve constar do requerimento, mas não é divulgada. Exigir divulgação plena da finalidade contraria a própria razão da sessão secreta.');
+
+  /* ----- Constituição: Poder Legislativo e servidores (jurisprudência do STF) ----- */
+  var cStf = 'Acerca dos servidores públicos e do Poder Legislativo, julgue o item à luz da jurisprudência do STF.';
+  ce(106, 'constitucional', cStf, 'Presidente de comissão parlamentar de inquérito não possui legitimidade para interpor recurso contra decisão que conceda habeas corpus em favor do paciente.', 'C',
+    'Certo. Para o STF, a CPI e seu presidente não são parte no habeas corpus e não têm legitimidade para recorrer da decisão que concede a ordem.');
+  ce(107, 'constitucional', cStf, 'O regime de aposentadoria especial por exercício de atividade de risco, aplicável às carreiras policiais, não se estende aos membros do Ministério Público nem aos ocupantes de cargos no Poder Judiciário.', 'C',
+    'Certo. O STF entende que a aposentadoria especial por atividade de risco (art. 40, § 4.º-B, da CF) vale para carreiras cujo risco é inerente à função, como as policiais, e não se estende a membros do MP nem a servidores do Judiciário.');
+  ce(109, 'constitucional', cStf, 'Cabe a comissão parlamentar de inquérito instaurada na Câmara dos Deputados convocar, e não apenas convidar, governador de estado para prestar depoimento ou esclarecimentos sobre a aplicação de recursos federais pelo respectivo ente federativo.', 'E',
+    'Errado. O STF decidiu (ADPF 848) que CPI do Congresso ou de suas Casas não pode convocar governador, sob pena de ofensa à autonomia federativa e à separação de poderes. Pode apenas convidá-lo.');
+  ce(110, 'constitucional', cStf, 'O regime de subsídio admite o pagamento de gratificação pelo exercício de função de confiança a membro do Ministério Público, desde que observado o teto remuneratório constitucional, vedada a acumulação e assegurado ao agente, nessa hipótese, o direito de opção.', 'C',
+    'Certo. O STF admite que o subsídio conviva com a retribuição por função de confiança, que paga encargo distinto das atribuições do cargo, respeitado o teto do art. 37, XI, da CF.');
+  ce(112, 'constitucional', cStf, 'A norma constitucional referente à definição sobre a possibilidade de reeleição dos membros da mesa diretora da casa legislativa não é de reprodução obrigatória, cabendo aos estados e ao Distrito Federal disciplinar a matéria no exercício de sua autonomia político-administrativa, vedada, contudo, mais de uma reeleição ou recondução consecutiva para o mesmo cargo na mesma legislatura ou na subsequente.', 'C',
+    'Certo. O STF entende que o art. 57, § 4.º, da CF não é de reprodução obrigatória, mas limitou os estados e o DF a uma única reeleição ou recondução sucessiva para o mesmo cargo da Mesa.');
+
+  var cProc = 'No que se refere às normas constitucionais relativas às matérias legislativas e ao processo legislativo, julgue o item.';
+  ce(114, 'constitucional', cProc, 'Os projetos de lei acerca do direito penal são de iniciativa privativa do procurador-geral da República.', 'E',
+    'Errado. Direito penal é competência privativa da União (art. 22, I, da CF), mas a iniciativa é geral (art. 61): qualquer deputado, senador, comissão, o Presidente da República ou os cidadãos. O PGR não tem iniciativa privativa sobre isso.');
+  ce(116, 'constitucional', cProc, 'É admissível que uma proposta de emenda constitucional seja apresentada por mais da metade das assembleias legislativas das unidades da Federação.', 'C',
+    'Certo. O art. 60, III, da CF admite PEC de mais da metade das assembleias legislativas, cada uma se manifestando pela maioria relativa de seus membros.');
+  ce(118, 'constitucional', cProc, 'O presidente da República pode editar medida provisória sobre matéria de direito civil, mas não sobre matéria de direito processual civil.', 'C',
+    'Certo. O art. 62, § 1.º, I, b, da CF veda MP sobre direito penal, processual penal e processual civil. Direito civil não está entre as vedações.');
+  ce(119, 'constitucional', 'A respeito do procedimento legislativo, julgue o item.', 'A matéria constante de projeto de lei rejeitado não poderá constituir objeto de novo projeto na mesma sessão legislativa.', 'E',
+    'Errado. O art. 67 da CF tem uma exceção: a matéria pode ser reapresentada na mesma sessão legislativa mediante proposta da maioria absoluta dos membros de qualquer das Casas. A afirmação absoluta torna o item errado.');
+
+  var cFisc = 'Com base nas normas constitucionais acerca da fiscalização contábil, financeira e orçamentária da administração pública, julgue o item.';
+  ce(123, 'constitucional', cFisc, 'Os atos de aposentadorias de servidores da Câmara dos Deputados são submetidos à apreciação, para registro, do TCU, sendo a concessão, todavia, eficaz desde a publicação do ato.', 'C',
+    'Certo. O TCU aprecia a legalidade das aposentadorias para fins de registro (art. 71, III, da CF), mas o ato produz efeitos desde a publicação, e o registro posterior o confirma ou não.');
+  ce(124, 'constitucional', cFisc, 'No exercício do controle externo, o TCU tem a atribuição constitucional de fiscalizar os atos administrativos do STF.', 'C',
+    'Certo. O controle externo alcança as unidades administrativas dos três Poderes (art. 71, IV, da CF). Os atos administrativos do STF, como contratos e despesas, estão sujeitos ao TCU.');
+
+  /* ----- Governança: gestão de riscos ----- */
+  ce(139, 'administrativo', 'Em relação a governança, julgue o item.', 'A gestão efetiva de riscos requer conhecimento acerca do apetite ao risco e da cultura organizacional, sendo admitidas estratégias que abranjam desde a mitigação até a exploração deliberada do risco, visando obter maiores benefícios.', 'C',
+    'Certo. A gestão de riscos (Decreto 9.203/2017, art. 17; ISO 31000; COSO) parte do apetite a risco e da cultura da organização. As respostas vão de evitar, mitigar, transferir e aceitar até explorar o risco quando ele representa oportunidade.');
+
+  /* ----- Tecnologia da informação e dados ----- */
+  ce(168, 'ti', 'Acerca do Windows 10 e de programas e aplicações do Microsoft Office 365, julgue o item.', 'Em uma mesma conversa no Microsoft Teams, é possível incluir links de itens dos aplicativos Excel, PowerPoint e Word, os quais poderão ser editados, de forma simultânea, por diferentes usuários, diretamente no Teams, sem necessidade de download do arquivo.', 'C',
+    'Certo. Arquivos do Office compartilhados no Teams ficam no OneDrive ou no SharePoint e abrem dentro do próprio Teams, com coautoria simultânea e sem baixar o arquivo.');
+
+  var cRede = 'Julgue o item, referente a redes de computadores.';
+  ce(169, 'ti', cRede, 'As abas anônimas, também chamadas de privadas, oferecem privacidade local, sem ocultar as atividades de sites e provedores de Internet.', 'C',
+    'Certo. A navegação anônima apenas deixa de gravar histórico, cookies e dados de formulário no computador. Os sites visitados, o provedor e a rede da organização continuam vendo o tráfego.');
+  ce(170, 'ti', cRede, 'Os dados de uma organização armazenados em nuvem pública podem ser visualizados por outras organizações, sem que estas, contudo, possam alterá-los.', 'E',
+    'Errado. Na nuvem pública a infraestrutura é compartilhada, mas os dados de cada cliente são isolados e só acessíveis a quem ele autorizar. Outras organizações não podem visualizá-los.');
+  ce(171, 'ti', cRede, 'O Google Chrome admite a utilização de múltiplos perfis em um mesmo computador, bem como permite a separação de contas pessoais e de trabalho, cada qual com seus respectivos históricos, favoritos e senhas.', 'C',
+    'Certo. Cada perfil do Chrome tem histórico, favoritos, senhas, extensões e configurações próprios, o que permite separar o uso pessoal do profissional.');
+
+  var cSeg = 'Julgue o item, relativo a procedimentos de backup, vírus e worms, soluções anti-spyware e ameaças pharming.';
+  ce(172, 'ti', cSeg, 'Soluções anti-spyware contemporâneas estruturam a detecção de atividades de espionagem em uma camada única de correlação de assinaturas de código previamente classificadas que realiza a identificação reativa de artefatos conhecidos.', 'E',
+    'Errado. As soluções atuais combinam várias camadas: assinaturas, heurística, análise de comportamento em tempo real e inteligência em nuvem. Assim detectam também ameaças novas, e não só artefatos já conhecidos.');
+  ce(173, 'ti', cSeg, 'Vírus e worms distinguem-se, entre outros aspectos, pelos mecanismos de propagação: vírus usualmente dependem da execução de código por um hospedeiro para se disseminar, ao passo que worms, em geral, exploram serviços ou vulnerabilidades de rede para autopropagação, sem interação direta do usuário.', 'C',
+    'Certo. O vírus se anexa a um arquivo ou programa e precisa que ele seja executado. O worm é autônomo e se replica pela rede explorando falhas, sem ação do usuário.');
+  ce(174, 'ti', cSeg, 'O pharming caracteriza-se pela manipulação direta do conteúdo apresentado ao usuário no navegador por meio de código malicioso, com atuação associada à modificação dinâmica de páginas durante a sessão.', 'E',
+    'Errado. Pharming é o redirecionamento do usuário para um site falso, mesmo digitando o endereço correto, por envenenamento de DNS ou alteração do arquivo hosts. Alterar a página durante a sessão é outro ataque (man-in-the-browser).');
+  ce(175, 'ti', cSeg, 'Em ambientes corporativos com sistemas de backup com versionamento online e verificação periódica de integridade, é dispensável a manutenção de cópias de segurança offline para mitigação de riscos associados a ransomware, uma vez que a recuperação íntegra pode ser assegurada a partir de repositórios online integrados.', 'E',
+    'Errado. O ransomware pode cifrar ou apagar também os repositórios conectados. Por isso se recomenda manter ao menos uma cópia offline ou imutável (regra 3-2-1).');
+
+  var cIa = 'No que se refere a inteligência artificial, ética e responsabilidade digital no serviço público, ciência de dados e governança da informação, julgue o item.';
+  ce(176, 'ti', cIa, 'A governança da informação estabelece políticas, papéis e processos para assegurar o uso adequado das informações ao longo de seu ciclo de vida, contribuindo para o alinhamento da gestão informacional às exigências regulatórias.', 'C',
+    'Certo. A governança da informação define quem decide e como a informação é criada, usada, guardada e descartada, garantindo conformidade com normas como LAI e LGPD.');
+  ce(177, 'ti', cIa, 'O foundation model de inteligência artificial fundamenta-se na representação explícita do conhecimento por meio de regras formais previamente definidas, sendo o desempenho dos modelos associado, por definição, à completude e à consistência dessas regras.', 'E',
+    'Errado. Modelos de fundação são grandes redes neurais pré-treinadas em enormes volumes de dados, em geral de forma autossupervisionada, e depois adaptadas a várias tarefas. Regras formais explícitas caracterizam os sistemas especialistas (IA simbólica).');
+  ce(178, 'ti', cIa, 'Aplicações de ciência de dados empregam métodos estatísticos e de aprendizado de máquina para extração de padrões, construção de modelos preditivos e suporte analítico a decisões, em tarefas como classificação, detecção de anomalias e análise de grandes volumes de dados.', 'C',
+    'Certo. É a descrição usual da ciência de dados: estatística, computação e conhecimento do negócio aplicados a dados para descrever, prever e apoiar decisões.');
+  ce(179, 'ti', cIa, 'No serviço público, a ética e a responsabilidade digital incluem a obrigação institucional de assegurar rastreabilidade, registro decisório e justificativa técnica nos sistemas informatizados que apoiam atos administrativos, de modo a viabilizar auditoria, controle e responsabilização, quando couber.', 'C',
+    'Certo. Sistemas que apoiam atos administrativos precisam ser auditáveis e explicáveis, em atenção à motivação dos atos, à transparência e à responsabilização (accountability).');
+  ce(180, 'ti', cIa, 'Em um modelo de classificação aplicado à detecção de fraudes, ainda que as classes sejam desbalanceadas, a acurácia obtida no conjunto de teste constitui métrica adequada de avaliação do desempenho do modelo, ao refletir a proporção global de previsões corretas em relação ao total de registros avaliados.', 'E',
+    'Errado. Com classes desbalanceadas, a acurácia engana: se 99% das transações são legítimas, um modelo que nunca aponta fraude acerta 99%. Usam-se precisão, revocação (recall), F1 e curvas PR ou ROC.');
 })();

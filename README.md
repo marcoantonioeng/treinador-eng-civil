@@ -50,5 +50,13 @@ Para incluir questões, edite `js/questoes.js` (funções `ce(...)` e `me(...)`)
 - Língua Inglesa: 9 itens (27–36; o 30 foi anulado).
 - Direito Administrativo e Administração Pública: 44 itens (47–90).
 - Raciocínio lógico (37–46) ficou de fora: não consta do edital do cargo 6.
-- Saíram 4 inéditos que repetiam esses assuntos (NBA09, NBA16, NBA17 e NBA21). O banco passa a ter 923 itens.
-- Os itens de Regimento Interno estão no caderno de Conhecimentos Específicos, cujo gabarito ainda não foi incorporado.
+- Saíram 4 inéditos que repetiam esses assuntos (NBA09, NBA16, NBA17 e NBA21).
+
+### Câmara dos Deputados 2025 · Conhecimentos Específicos do cargo 1 (gabarito oficial)
+No mesmo arquivo, 36 itens do caderno do cargo 1 (Processo Legislativo e Gestão, CD-AL-011), escolhidos por estarem nos Conhecimentos Básicos do cargo 6:
+- Regimento Interno e Regimento Comum: 11 itens (91–103; o 93 e o 97 foram anulados).
+- Constituição (Poder Legislativo, processo legislativo, fiscalização e servidores, com jurisprudência do STF): 11 itens.
+- Gestão de riscos na governança: 1 item (139).
+- TI e dados (Teams, navegação, nuvem, segurança, IA e ciência de dados): 13 itens (168–180).
+- Ficaram de fora: Código de Ética, teoria política, atualidades, gestão organizacional, hardware, Windows, orçamento e os itens de procedimento regimental fora dos artigos que o edital cobra.
+- Saíram mais 4 inéditos repetidos (NBC05, NBC06, NBC32 e NBT21). O banco passa a ter 955 itens.
