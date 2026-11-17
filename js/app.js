@@ -719,11 +719,19 @@
       : '<div class="kpi' + (faltam <= 14 ? ' l' : '') + '"><span class="rot">Prova em</span><strong>' + Math.max(0, faltam) + '</strong><small>' +
         (faltam > 0 ? 'dias · ' + Math.ceil((naoVistos + venc) / Math.max(1, faltam)) + ' itens/dia cobrem o banco' : faltam === 0 ? 'é hoje' : 'data já passou') + '</small></div>';
     var metaPct = Math.min(100, pct(hoje.n, P.cfg.meta || 1));
-    var kHoje = '<div class="kpi"><span class="rot">Hoje</span><strong>' + hoje.n + '<span style="font-size:.5em;color:var(--tinta-2)"> / ' + P.cfg.meta + '</span></strong>' +
+    var kHoje = '<div class="kpi"><span class="rot">Meta do dia</span><strong>' + hoje.n + '<span style="font-size:.5em;color:var(--tinta-2)"> / ' + P.cfg.meta + '</span></strong>' +
       '<small>' + (hoje.n ? pct(hoje.c, hoje.n) + '% de acerto' : 'meta diária de itens') + '</small><div class="medidor"><i class="' + (metaPct >= 100 ? 'cheio' : '') + '" style="width:' + metaPct + '%"></i></div></div>';
     var kBanco = '<div class="kpi"><span class="rot">Itens já vistos</span><strong>' + vistos + '<span style="font-size:.5em;color:var(--tinta-2)"> / ' + QUESTOES.length + '</span></strong><small>' + QUESTOES.length + ' objetivas + ' + DISC.length + ' discursivas</small></div>';
     var kProj = '<div class="kpi' + (ch.projecao != null && ch.projecao < 0 ? ' e' : ch.projecao != null && ch.projecao >= 60 ? ' c' : '') + '"><span class="rot">Nota líquida estimada</span><strong>' +
       (ch.n >= 10 ? (ch.projecao > 0 ? '+' : '') + ch.projecao : '—') + '</strong><small>' + (ch.n >= 10 ? 'em ' + ITENS_PROVA + ' itens C/E · últimos ' + ch.n : 'responda 10 itens C/E') + '</small></div>';
+
+    var brancosHoje = Math.max(0, hoje.n - hoje.c - hoje.e);
+    var placarHoje = '<section class="bloco"><span class="rot">Questões objetivas respondidas hoje</span><div class="hoje">' +
+      '<div><span class="rot">Respondidas</span><strong>' + hoje.n + '</strong></div>' +
+      '<div class="c"><span class="rot">Certas</span><strong>' + hoje.c + '</strong></div>' +
+      '<div class="e"><span class="rot">Erradas</span><strong>' + hoje.e + '</strong></div>' +
+      '<div><span class="rot">Em branco</span><strong>' + brancosHoje + '</strong></div>' +
+      '</div></section>';
 
     // ---- treino recomendado
     var titulo, desc, nInt = 20;
@@ -761,7 +769,7 @@
         '<td class="num"><b>' + (s.liq > 0 ? '+' : '') + s.liq + '</b></td><td class="num">' + pct(Math.max(0, s.liq), s.total) + '%</td></tr>';
     }).join('');
 
-    app.innerHTML = cabecalhoJogador() +
+    app.innerHTML = cabecalhoJogador() + placarHoje +
       '<div class="kpis">' + kProva + kHoje + kBanco + kProj + '</div>' +
       '<section class="bloco"><span class="rot">Seu canteiro · um prédio por tema, um andar por fase</span><div class="canteiro">' + skyline() + '</div></section>' +
       (alvo ? '<button class="btn prim grande cta" id="btn-continuar"><span class="cta-t">Jogar ' + ic('seta') + '</span><span class="cta-s">' + esc(nomeTema[alvo.tema]) + ' · Fase ' + (alvo.fase + 1) + '</span></button>'
@@ -1065,8 +1073,8 @@
     }
     var totalTempo = simulado ? sessao.fila.length * SEG_SIMULADO : TEMPO;
     var contador = sessao.finita ? '' : ' · item ' + (sessao.respostas.length + 1);
-    app.innerHTML = '<div class="hud" id="hud">' + hudHTML(false) + '</div>' +
-      '<div class="escala"><div class="escala-topo"><span class="rot">' + (simulado ? 'Tempo restante do simulado' : esc(sessao.rotulo) + contador) + '</span><span class="seg dado" id="seg"></span></div>' + escalaSVG(totalTempo) + '</div>' +
+    app.innerHTML = '<div class="topo-fixo"><div class="hud" id="hud">' + hudHTML(false) + '</div>' +
+      '<div class="escala"><div class="escala-topo"><span class="rot">' + (simulado ? 'Tempo restante do simulado' : esc(sessao.rotulo) + contador) + '</span><span class="seg dado" id="seg"></span></div>' + escalaSVG(totalTempo) + '</div></div>' +
       '<article class="folha" id="folha">' +
       '<span class="fonte"><span>' + esc(nomeTema[q.tema]) + ' · ' + esc(q.fonte) + '</span>' + (simulado ? '' : '<span>' + esc(hist) + '</span>') + '</span>' +
       (q.contexto ? '<div class="contexto">' + esc(q.contexto) + '</div>' : '') +
