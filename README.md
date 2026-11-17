@@ -85,7 +85,7 @@ A pasta `celular/` é o mesmo treinador como aplicativo instalável:
 
 **Montar:** `./montar.sh celular` gera `celular/index.html` e `celular/sw.js` (a versão do cache muda sozinha a cada alteração). `./montar.sh artefato <saida.html>` gera a página do artefato.
 
-**Publicar:** a pasta precisa estar num endereço https. Qualquer hospedagem estática serve: Netlify Drop (arrastar a pasta `celular/`), Cloudflare Pages ou GitHub Pages.
+**Publicar:** a pasta precisa estar num endereço https. Neste repositório, o fluxo `.github/workflows/pages.yml` publica `celular/` no GitHub Pages a cada envio para `main`, no endereço https://marcoantonioeng.github.io/treinador-eng-civil/. Para isso, ative uma vez em Settings → Pages → Source: **GitHub Actions**. Outras hospedagens estáticas também servem (Netlify Drop, Cloudflare Pages).
 
 **Instalar:**
 - Android: abra o endereço no Chrome → menu ⋮ → **Instalar app** (ou Adicionar à tela inicial).
