@@ -38,3 +38,8 @@ Atalhos: `C`/`E` (Certo/Errado), `A`–`E` (múltipla escolha), `D` (alterna cer
 Gabaritos das provas reais conforme os gabaritos oficiais definitivos. Itens anulados ou de gabarito controverso ficaram de fora; questões baseadas na Lei 8.666/1993 foram atualizadas para a Lei 14.133/2021.
 
 Para incluir questões, edite `js/questoes.js` (funções `ce(...)` e `me(...)`) e `js/discursivas.js`.
+
+### Conhecimentos Básicos (reforço de 17/11/2026)
+`js/questoes-basicos.js` acrescenta 137 itens aos temas de Direito Constitucional e Regimento Interno, Direito Administrativo e TI e Dados:
+- **37 itens de provas anexadas**, com gabarito definitivo oficial: Câmara dos Deputados 2003 (21), TRE-BA 2010 (6), TJRO 2012 (3) e TCE-PR 2016 (7).
+- **100 itens inéditos no estilo Cebraspe** sobre os tópicos que essas provas não cobrem: Regimento Interno da Câmara, Regimento Comum, Lei 9.784, improbidade (Lei 14.230), governança (Decreto 9.203), LAI, LGPD, Microsoft 365, IA e visualização de dados. O gabarito desses itens não é oficial.

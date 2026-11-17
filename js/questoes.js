@@ -32,7 +32,7 @@ window.TEMAS = [
   { id: 'portugues', nome: 'Língua Portuguesa', edital: '14.2.3', grupo: 'basico' },
   { id: 'ingles', nome: 'Língua Inglesa', edital: '14.2.3', grupo: 'basico' },
   { id: 'administrativo', nome: 'Direito Administrativo e Administração Pública', edital: '14.2.3', grupo: 'basico' },
-  { id: 'constitucional', nome: 'Direito Constitucional', edital: '14.2.3', grupo: 'basico' },
+  { id: 'constitucional', nome: 'Direito Constitucional e Regimento Interno', edital: '14.2.3', grupo: 'basico' },
   { id: 'ti', nome: 'Tecnologia da Informação e Dados', edital: '14.2.3', grupo: 'basico' }
 ];
 
