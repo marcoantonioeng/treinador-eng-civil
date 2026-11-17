@@ -74,3 +74,19 @@ O botão **Desempenho diário**, ao lado de Conquistas, abre o registro do trein
 - **Gráficos:** itens por dia (certas, erradas e em branco, com a meta diária) e percentual de acerto por dia (com a média do período). Ao tocar ou passar o mouse, aparecem os números do dia; as setas do teclado percorrem os dias.
 - **Tabelas:** desempenho por tema no período e registro dia a dia (itens, certas, erradas, branco, acerto, líquida, XP e tema principal).
 - **Dados:** cada resposta grava no dia a divisão por tema e o XP ganho. O histórico guarda até 400 dias (antes eram 120). Dias anteriores a esta versão aparecem com os totais; a divisão por tema é reconstruída a partir das últimas respostas guardadas.
+
+## Aplicativo para celular (PWA)
+A pasta `celular/` é o mesmo treinador como aplicativo instalável:
+- abre em tela cheia pelo ícone e funciona sem internet depois da primeira abertura;
+- funciona no Android (Chrome) e no iPhone (Safari);
+- o progresso fica salvo no aparelho;
+- para levar o progresso do artefato do Claude para o celular (ou de volta), use Ajustes → Cópia do progresso → Exportar e, no outro lugar, Importar;
+- no aplicativo instalado, o botão Voltar do Android leva ao Canteiro em vez de fechar o app.
+
+**Montar:** `./montar.sh celular` gera `celular/index.html` e `celular/sw.js` (a versão do cache muda sozinha a cada alteração). `./montar.sh artefato <saida.html>` gera a página do artefato.
+
+**Publicar:** a pasta precisa estar num endereço https. Qualquer hospedagem estática serve: Netlify Drop (arrastar a pasta `celular/`), Cloudflare Pages ou GitHub Pages.
+
+**Instalar:**
+- Android: abra o endereço no Chrome → menu ⋮ → **Instalar app** (ou Adicionar à tela inicial).
+- iPhone: abra no Safari → Compartilhar → **Adicionar à Tela de Início**.

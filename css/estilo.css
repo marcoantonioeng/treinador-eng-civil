@@ -524,3 +524,12 @@ th.num { font-family: var(--f-titulo); }
 .meta-ok .ic { width: 14px; height: 14px; }
 .grafico-box .ref-l { stroke: var(--tinta-2); stroke-width: 1.2; stroke-dasharray: 4 3; }
 .legenda i.sw-ref { height: 0; width: 16px; border-top: 2px dashed var(--tinta-2); vertical-align: 3px; background: none; }
+
+/* ---------- cópia do progresso ---------- */
+.copia { display: flex; flex-direction: column; gap: 8px; padding: 10px 14px 12px; border-top: 1px solid var(--linha); font-size: 14.5px; }
+.copia p { max-width: 62ch; }
+.copia textarea { width: 100%; min-height: 0; height: 96px; font-family: var(--f-dado); font-size: 12px; padding: 6px 8px; background: var(--folha); color: var(--tinta); border: 1px solid var(--linha-forte); border-radius: 4px; resize: vertical; }
+.copia input[type=file] { font: inherit; font-size: 14px; max-width: 100%; }
+.copia-acoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.copia-msg { font-family: var(--f-dado); font-size: 12.5px; color: var(--certo); }
+.copia-msg.erro { color: var(--errado); }

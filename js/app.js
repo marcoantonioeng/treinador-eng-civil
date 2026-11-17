@@ -257,9 +257,11 @@
     P = remoto;
     try { localStorage.setItem('treinador-prog', JSON.stringify(P)); } catch (e) { /* ignora */ }
   }
+  var instalado = false;
+  try { instalado = !!((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone); } catch (e) { /* ignora */ }
   function textoSync() {
     if (armaz.aviso) return armaz.aviso;
-    return armaz.modo === 'conta' ? 'Progresso salvo na sua conta' : 'Progresso salvo neste navegador';
+    return armaz.modo === 'conta' ? 'Progresso salvo na sua conta' : instalado ? 'Progresso salvo neste aparelho' : 'Progresso salvo neste navegador';
   }
   function atualizarSync() {
     var el = document.getElementById('sync');
@@ -813,7 +815,7 @@
         '<label><input type="checkbox" id="opt-audio"' + (P.cfg.audio ? ' checked' : '') + '> Sons e correção em áudio</label>' +
         '<label><input type="checkbox" id="opt-just"' + (P.cfg.lerJust ? ' checked' : '') + '> Ler a justificativa em voz alta</label>' +
         '<span id="sync" class="sync">' + esc(textoSync()) + '</span>' +
-      '</div><div class="perigo">' +
+      '</div>' + painelCopia() + '<div class="perigo">' +
         (confirmarApagar
           ? '<span>Apagar todo o histórico, caixas de revisão, simulados, níveis, estrelas e conquistas? Isso não pode ser desfeito.</span><button class="btn-perigo forte" id="btn-apagar-sim">Apagar progresso</button><button class="btn-mini" id="btn-apagar-nao">Cancelar</button>'
           : '<button class="btn-perigo" id="btn-apagar">Recomeçar do zero</button>') +
@@ -841,6 +843,7 @@
     });
     document.getElementById('opt-audio').addEventListener('change', function (e) { P.cfg.audio = e.target.checked; salvar(); if (!P.cfg.audio) calarVoz(); });
     document.getElementById('opt-just').addEventListener('change', function (e) { P.cfg.lerJust = e.target.checked; salvar(); });
+    ligarPainelCopia();
     var bA = document.getElementById('btn-apagar');
     if (bA) bA.addEventListener('click', function () { confirmarApagar = true; telaInicioMantendo(); });
     var bS = document.getElementById('btn-apagar-sim');
@@ -854,6 +857,63 @@
       return false;
     };
     window.scrollTo(0, 0);
+  }
+  /* ---------------- cópia do progresso (levar de um aparelho para outro) ---------------- */
+  var copiaAberta = null, copiaMsg = '';
+  function nRespostas(p) { var n = 0; Object.keys(p.itens || {}).forEach(function (k) { n += (p.itens[k] && p.itens[k].n) || 0; }); return n; }
+  function txtRespostas(p) { var n = nRespostas(p); return fmtN(n) + (n === 1 ? ' resposta' : ' respostas'); }
+  function painelCopia() {
+    var corpo = '';
+    if (copiaAberta === 'exportar') {
+      corpo = '<p>Guarde o arquivo baixado ou copie o código abaixo. No outro aparelho, abra Ajustes, toque em <b>Importar progresso</b> e escolha o arquivo ou cole o código.</p>' +
+        '<textarea id="copia-txt" readonly rows="4" aria-label="Código do progresso">' + esc(JSON.stringify(P)) + '</textarea>' +
+        '<div class="copia-acoes"><button class="btn-mini" id="copia-copiar">Copiar código</button><button class="btn-mini" id="copia-baixar">Baixar arquivo</button><button class="btn-mini" id="copia-fechar">Fechar</button></div>';
+    } else if (copiaAberta === 'importar') {
+      corpo = '<p>Escolha o arquivo de progresso ou cole o código exportado. O progresso deste aparelho (' + txtRespostas(P) + ') será <b>substituído</b>.</p>' +
+        '<input type="file" id="copia-arq" accept=".json,application/json,text/plain">' +
+        '<textarea id="copia-txt" rows="4" placeholder="ou cole aqui o código" aria-label="Código do progresso"></textarea>' +
+        '<div class="copia-acoes"><button class="btn-mini" id="copia-importar">Importar e substituir</button><button class="btn-mini" id="copia-fechar">Cancelar</button></div>';
+    }
+    return '<div class="copia"><span class="rot">Cópia do progresso</span>' +
+      (copiaAberta ? corpo : '<div class="copia-acoes"><button class="btn-mini" id="copia-exp">Exportar progresso</button><button class="btn-mini" id="copia-imp">Importar progresso</button></div>') +
+      (copiaMsg ? '<p class="copia-msg' + (/inválido|não permite/.test(copiaMsg) ? ' erro' : '') + '" role="status">' + esc(copiaMsg) + '</p>' : '') + '</div>';
+  }
+  function ligarPainelCopia() {
+    function abrir(m) { copiaAberta = m; copiaMsg = ''; telaInicioMantendo(); }
+    function liga(id, f) { var el = document.getElementById(id); if (el) el.addEventListener('click', f); }
+    liga('copia-exp', function () { abrir('exportar'); });
+    liga('copia-imp', function () { abrir('importar'); });
+    liga('copia-fechar', function () { abrir(null); });
+    liga('copia-copiar', function () {
+      var ta = document.getElementById('copia-txt'), ok = function () { copiaMsg = 'Código copiado.'; telaInicioMantendo(); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(ok, function () { ta.select(); try { document.execCommand('copy'); ok(); } catch (e) { /* segue */ } });
+      else { ta.select(); try { document.execCommand('copy'); ok(); } catch (e) { /* segue */ } }
+    });
+    liga('copia-baixar', function () {
+      try {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(P)], { type: 'application/json' }));
+        a.download = 'treinador-progresso-' + chaveDia() + '.json';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+      } catch (e) { copiaMsg = 'Este ambiente não permite baixar arquivos. Use Copiar código.'; telaInicioMantendo(); }
+    });
+    var arq = document.getElementById('copia-arq');
+    if (arq) arq.addEventListener('change', function () {
+      var f = arq.files && arq.files[0]; if (!f) return;
+      var r = new FileReader();
+      r.onload = function () { document.getElementById('copia-txt').value = String(r.result || ''); };
+      r.readAsText(f);
+    });
+    liga('copia-importar', function () {
+      var txt = (document.getElementById('copia-txt').value || '').trim(), novo = null;
+      try { var o = JSON.parse(txt); if (o && o.v === 1 && o.itens && o.dias) novo = normalizarP(o); } catch (e) { novo = null; }
+      if (!novo) { copiaMsg = 'Código inválido. Exporte de novo no outro aparelho e tente outra vez.'; telaInicioMantendo(); return; }
+      novo.atualizado = Date.now();
+      P = novo; combo = 0; copiaAberta = null;
+      copiaMsg = 'Progresso importado: ' + txtRespostas(P) + ', nível e histórico.';
+      salvar(); telaInicioMantendo();
+    });
   }
   function telaInicioMantendo() { var y = window.scrollY; telaInicio(); var b = document.getElementById('ajustes-box'); if (b) b.open = true; window.scrollTo(0, y); }
 
@@ -1822,6 +1882,15 @@
     if (k === 'enter' && ev.target && (ev.target.tagName === 'BUTTON' || (ev.target.getAttribute && ev.target.getAttribute('role') === 'button'))) return;
     if (teclaAtual(k)) ev.preventDefault();
   });
+
+  // No aplicativo instalado, o botão Voltar do celular leva ao Canteiro em vez de fechar o app.
+  if (instalado && window.history && history.pushState) {
+    history.replaceState({ treinador: 'raiz' }, '');
+    history.pushState({ treinador: 'app' }, '');
+    window.addEventListener('popstate', function () {
+      if (tela !== 'inicio' || sessao) { pararTimers(); sessao = null; telaInicio(); history.pushState({ treinador: 'app' }, ''); }
+    });
+  }
 
   rolarDia();
   telaInicio();
