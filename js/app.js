@@ -70,6 +70,7 @@
     seta: '<path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
     voltar: '<path d="M19 12H6M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
     medalha: '<circle cx="12" cy="15" r="6"/><path d="M8 2h8l-2 6h-4z"/>',
+    grafico: '<path d="M3 21h18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="5" y="12" width="3.200" height="7" rx="1"/><rect x="10.400" y="6" width="3.200" height="13" rx="1"/><rect x="15.800" y="9" width="3.200" height="10" rx="1"/>',
     check: '<path d="M4 12.5l5 5L20 6.500" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
   };
   function ic(n, cls) { return '<svg class="ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' + IC[n] + '</svg>'; }
@@ -350,11 +351,15 @@
     var k = chaveDia();
     var d = P.dias[k] || { n: 0, c: 0, e: 0 };
     d.n++; if (resultado === 'C') d.c++; else if (resultado === 'E') d.e++;
+    if (!d.t) d.t = {};
+    var dt = d.t[q.tema] || [0, 0, 0];
+    dt[0]++; if (resultado === 'C') dt[1]++; else if (resultado === 'E') dt[2]++;
+    d.t[q.tema] = dt;
     P.dias[k] = d;
     P.log.push([q.id, resultado, certeza ? 1 : 0, Date.now()]);
     if (P.log.length > 400) P.log = P.log.slice(-400);
     var chaves = Object.keys(P.dias).sort();
-    if (chaves.length > 120) chaves.slice(0, chaves.length - 120).forEach(function (c) { delete P.dias[c]; });
+    if (chaves.length > 400) chaves.slice(0, chaves.length - 400).forEach(function (c) { delete P.dias[c]; });
     // ofensiva: o primeiro item do dia mantém a sequência de dias
     var of = sequencia();
     if (of > P.jogo.melhorOfensiva) P.jogo.melhorOfensiva = of;
@@ -511,6 +516,8 @@
     if (n <= 0) return;
     var antes = nivelDe(P.jogo.xp).i;
     P.jogo.xp += n;
+    var dx = P.dias[chaveDia()]; // só soma ao dia que já tem respostas (um dia vazio quebraria a ofensiva)
+    if (dx) dx.xp = (dx.xp || 0) + n;
     if (sessao) sessao.ganhos[rotulo] = (sessao.ganhos[rotulo] || 0) + n;
     var depois = nivelDe(P.jogo.xp);
     if (depois.i > antes) {
@@ -541,6 +548,7 @@
     if (tela === 'tema' && temaAberto) telaTema(temaAberto);
     else if (tela === 'painel') telaPainel();
     else if (tela === 'conquistas') telaConquistas();
+    else if (tela === 'desempenho') telaDesempenho();
     else telaInicio();
   }
 
@@ -797,7 +805,8 @@
       '<section class="bloco"><span class="rot">Missões de hoje · ' + esc(ofTxt) + '</span><div class="missoes">' + missoes + '</div></section>' +
       '<section class="bloco"><span class="rot">Escolha o tema (edital, item 14.2.4, Cargo 6)</span><div class="temas">' + temas + '</div></section>' +
       '<section class="bloco"><span class="rot">Conhecimentos Básicos (edital, item 14.2.3)</span><div class="temas">' + temasBasicos + '</div></section>' +
-      '<div class="acoes"><button class="btn sec" id="btn-conq">' + ic('medalha') + 'Conquistas ' + nConq + '/' + CONQ.length + '</button></div>' +
+      '<div class="acoes"><button class="btn sec" id="btn-conq">' + ic('medalha') + 'Conquistas ' + nConq + '/' + CONQ.length + '</button>' +
+        '<button class="btn sec" id="btn-desemp">' + ic('grafico') + 'Desempenho diário</button></div>' +
       '<details class="ajustes-box" id="ajustes-box"><summary>Ajustes</summary><div class="ajustes">' +
         '<label for="opt-data">Data da prova <input type="date" id="opt-data" value="' + esc(P.cfg.dataProva || '') + '"></label>' +
         '<label for="opt-meta">Meta diária <input type="number" id="opt-meta" min="5" max="300" step="5" value="' + P.cfg.meta + '"> itens</label>' +
@@ -823,6 +832,7 @@
     });
     document.getElementById('btn-painel').addEventListener('click', telaPainel);
     document.getElementById('btn-conq').addEventListener('click', telaConquistas);
+    document.getElementById('btn-desemp').addEventListener('click', telaDesempenho);
     var box = document.getElementById('ajustes-box');
     if (confirmarApagar) box.open = true;
     document.getElementById('opt-data').addEventListener('change', function (e) { P.cfg.dataProva = e.target.value; salvar(); telaInicioMantendo(); });
@@ -927,6 +937,259 @@
     var at = app.querySelector('.andar.atual');
     if (at && at.scrollIntoView) at.scrollIntoView({ block: 'center' });
   }
+
+  /* ================= desempenho diário ================= */
+  var periodoDesemp = 30, redesenharDesemp = null;
+  var SEMANA = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  function dataDeChave(k) { var p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function ddmm(d) { return pad(d.getDate()) + '/' + pad(d.getMonth() + 1); }
+  function sinal(n) { return (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n); }
+
+  // Dias gravados antes do registro por tema: reconstrói a divisão por tema a partir do histórico recente de respostas.
+  function temasDoLog() {
+    var m = {};
+    P.log.forEach(function (l) {
+      var q = porId[l[0]]; if (!q || !l[3]) return;
+      var k = chaveDia(new Date(l[3])), d = m[k] || (m[k] = {});
+      var v = d[q.tema] || (d[q.tema] = [0, 0, 0]);
+      v[0]++; if (l[1] === 'C') v[1]++; else if (l[1] === 'E') v[2]++;
+    });
+    return m;
+  }
+
+  // Monta os dias do período (do mais antigo para hoje). Acima de 100 dias, agrupa por semana.
+  function dadosDesempenho(periodo) {
+    var hoje = new Date(); hoje.setHours(12, 0, 0, 0);
+    var ini = new Date(hoje);
+    if (periodo === 'tudo') {
+      var ks = Object.keys(P.dias).filter(function (k) { return P.dias[k].n > 0; }).sort();
+      if (ks.length) { ini = dataDeChave(ks[0]); ini.setHours(12, 0, 0, 0); }
+      var minimo = new Date(hoje); minimo.setDate(minimo.getDate() - 13);
+      if (ini > minimo) ini = minimo;
+    } else ini.setDate(ini.getDate() - (periodo - 1));
+    var doLog = temasDoLog(), dias = [];
+    for (var d = new Date(ini); d <= hoje; d.setDate(d.getDate() + 1)) {
+      var k = chaveDia(d), r = P.dias[k] || {};
+      var n = r.n || 0, c = r.c || 0, e = r.e || 0;
+      dias.push({ k: k, data: new Date(d), n: n, c: c, e: e, b: Math.max(0, n - c - e), xp: r.xp || 0, t: r.t || doLog[k] || null, ativos: n > 0 ? 1 : 0 });
+    }
+    var semanal = dias.length > 100, barras = dias;
+    if (semanal) {
+      barras = [];
+      dias.forEach(function (x) {
+        var seg = (x.data.getDay() + 6) % 7; // segunda-feira abre a semana
+        var ult = barras[barras.length - 1];
+        if (!ult || seg === 0) { ult = { k: x.k, data: x.data, fim: x.data, n: 0, c: 0, e: 0, b: 0, ativos: 0, semana: true }; barras.push(ult); }
+        ult.fim = x.data; ult.n += x.n; ult.c += x.c; ult.e += x.e; ult.b += x.b; ult.ativos += x.ativos;
+      });
+    }
+    return { dias: dias, barras: barras, semanal: semanal };
+  }
+
+  function passoEixo(max) {
+    var alvo = max / 4, mag = Math.pow(10, Math.floor(Math.log(Math.max(alvo, 1)) / Math.LN10)), passos = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < passos.length; i++) if (passos[i] * mag >= alvo) return Math.max(1, passos[i] * mag);
+    return 10 * mag;
+  }
+  function rotuloBarra(x, semanal, ultima) {
+    if (semanal) return 'sem. ' + ddmm(x.data);
+    return ultima ? 'hoje' : ddmm(x.data);
+  }
+  function textoDica(x, semanal) {
+    var quando = semanal ? 'Semana de ' + ddmm(x.data) + ' a ' + ddmm(x.fim) : SEMANA[x.data.getDay()] + ', ' + ddmm(x.data) + (x.k === chaveDia() ? ' (hoje)' : '');
+    if (!x.n) return '<b>' + quando + '</b><span>sem treino</span>';
+    return '<b>' + quando + '</b>' +
+      '<span>' + x.n + (x.n === 1 ? ' item' : ' itens') + (semanal ? ' em ' + x.ativos + (x.ativos === 1 ? ' dia' : ' dias') : '') + '</span>' +
+      '<span><i class="sw sw-c"></i>' + x.c + ' certas</span>' +
+      '<span><i class="sw sw-e"></i>' + x.e + ' erradas</span>' +
+      (x.b ? '<span><i class="sw sw-b"></i>' + x.b + ' em branco</span>' : '') +
+      '<span>' + pct(x.c, x.n) + '% de acerto · líquida ' + sinal(x.c - x.e) + '</span>';
+  }
+
+  // Liga dica e navegação por teclado a um gráfico desenhado com faixas de largura igual.
+  function ligarDica(box, barras, semanal, esq, banda, aoMarcar) {
+    var svg = box.querySelector('svg'), dica = box.querySelector('.dica'), atual = -1;
+    function mostrar(i) {
+      if (i < 0 || i >= barras.length) return;
+      atual = i;
+      dica.innerHTML = textoDica(barras[i], semanal);
+      dica.hidden = false;
+      var cx = esq + banda * (i + 0.5), w = dica.offsetWidth, W = box.clientWidth;
+      dica.style.left = Math.max(0, Math.min(W - w, cx - w / 2)) + 'px';
+      aoMarcar(i);
+    }
+    function esconder() { dica.hidden = true; atual = -1; aoMarcar(-1); }
+    function indice(ev) { var r = svg.getBoundingClientRect(); return Math.floor((ev.clientX - r.left - esq) / banda); }
+    svg.addEventListener('pointermove', function (ev) { var i = indice(ev); if (i >= 0 && i < barras.length) mostrar(i); else esconder(); });
+    svg.addEventListener('pointerdown', function (ev) { var i = indice(ev); if (i >= 0 && i < barras.length) mostrar(i); });
+    svg.addEventListener('pointerleave', function (ev) { if (ev.pointerType === 'mouse') esconder(); });
+    svg.addEventListener('blur', esconder);
+    svg.addEventListener('keydown', function (ev) {
+      if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') {
+        ev.preventDefault();
+        var i = atual < 0 ? barras.length - 1 : atual + (ev.key === 'ArrowLeft' ? -1 : 1);
+        mostrar(Math.max(0, Math.min(barras.length - 1, i)));
+      } else if (ev.key === 'Escape') esconder();
+    });
+  }
+
+  function graficoItens(box, D) {
+    var barras = D.barras, N = barras.length, W = Math.max(280, box.clientWidth), H = 220;
+    var esq = 34, dir = 8, topo = 14, base = H - 30, alt = base - topo;
+    var meta = D.semanal ? 0 : (P.cfg.meta || 0);
+    var max = Math.max(1, meta);
+    barras.forEach(function (x) { if (x.n > max) max = x.n; });
+    var passo = passoEixo(max), teto = Math.ceil(max / passo) * passo;
+    var banda = (W - esq - dir) / N, bw = Math.max(2, Math.min(26, banda * 0.72)), y = function (v) { return base - (v / teto) * alt; };
+    var g = '';
+    for (var v = 0; v <= teto + 1e-9; v += passo) {
+      g += '<line class="grade-l" x1="' + esq + '" x2="' + (W - dir) + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) + '"/>' +
+        '<text class="eixo" x="' + (esq - 6) + '" y="' + (y(v) + 3.5).toFixed(1) + '" text-anchor="end">' + fmtN(v) + '</text>';
+    }
+    var marcas = '';
+    barras.forEach(function (x, i) {
+      var x0 = esq + banda * i + (banda - bw) / 2;
+      if (!x.n) { marcas += '<rect class="seg-0" x="' + x0.toFixed(1) + '" y="' + (base - 2) + '" width="' + bw.toFixed(1) + '" height="2"/>'; return; }
+      var partes = [['seg-c', x.c], ['seg-e', x.e], ['seg-b', x.b]].filter(function (p) { return p[1] > 0; });
+      var acum = 0;
+      partes.forEach(function (p, j) {
+        var yTopo = y(acum + p[1]), yBase = y(acum); acum += p[1];
+        if (j > 0) yBase -= 2; // 2px de folga entre segmentos
+        var h = yBase - yTopo; if (h < 1) { h = 1; yTopo = yBase - 1; }
+        if (j === partes.length - 1) {
+          var r = Math.min(4, bw / 2, h);
+          marcas += '<path class="' + p[0] + '" d="M' + x0.toFixed(1) + ',' + yBase.toFixed(1) + 'V' + (yTopo + r).toFixed(1) +
+            'Q' + x0.toFixed(1) + ',' + yTopo.toFixed(1) + ' ' + (x0 + r).toFixed(1) + ',' + yTopo.toFixed(1) +
+            'H' + (x0 + bw - r).toFixed(1) + 'Q' + (x0 + bw).toFixed(1) + ',' + yTopo.toFixed(1) + ' ' + (x0 + bw).toFixed(1) + ',' + (yTopo + r).toFixed(1) +
+            'V' + yBase.toFixed(1) + 'Z"/>';
+        } else marcas += '<rect class="' + p[0] + '" x="' + x0.toFixed(1) + '" y="' + yTopo.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '"/>';
+      });
+    });
+    var cada = Math.max(1, Math.ceil((D.semanal ? 64 : 46) / banda)), rot = '';
+    barras.forEach(function (x, i) {
+      var ult = i === N - 1;
+      if ((N - 1 - i) % cada === 0) rot += '<text class="eixo" x="' + (esq + banda * (i + 0.5)).toFixed(1) + '" y="' + (base + 17) + '" text-anchor="middle">' + rotuloBarra(x, D.semanal, ult) + '</text>';
+    });
+    var linhaMeta = meta ? '<line class="meta-l" x1="' + esq + '" x2="' + (W - dir) + '" y1="' + y(meta).toFixed(1) + '" y2="' + y(meta).toFixed(1) + '"/>' : '';
+    box.innerHTML = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" tabindex="0" role="img" aria-label="Itens respondidos por ' + (D.semanal ? 'semana' : 'dia') + ', divididos em certas, erradas e em branco. Use as setas para percorrer.">' +
+      g + '<line class="base-l" x1="' + esq + '" x2="' + (W - dir) + '" y1="' + base + '" y2="' + base + '"/>' + marcas + linhaMeta + rot +
+      '<rect class="foco" x="0" y="' + topo + '" width="0" height="' + alt + '"/></svg><div class="dica" hidden></div>';
+    var foco = box.querySelector('.foco');
+    ligarDica(box, barras, D.semanal, esq, banda, function (i) {
+      if (i < 0) { foco.setAttribute('width', 0); return; }
+      foco.setAttribute('x', (esq + banda * i).toFixed(1)); foco.setAttribute('width', banda.toFixed(1));
+    });
+  }
+
+  function graficoAcerto(box, D, media) {
+    var barras = D.barras, N = barras.length, W = Math.max(280, box.clientWidth), H = 170;
+    var esq = 34, dir = 8, topo = 12, base = H - 30, alt = base - topo, banda = (W - esq - dir) / N;
+    var y = function (v) { return base - (v / 100) * alt; }, cx = function (i) { return esq + banda * (i + 0.5); };
+    var g = '';
+    [0, 25, 50, 75, 100].forEach(function (v) {
+      g += '<line class="grade-l" x1="' + esq + '" x2="' + (W - dir) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>' +
+        '<text class="eixo" x="' + (esq - 6) + '" y="' + (y(v) + 3.5) + '" text-anchor="end">' + v + '%</text>';
+    });
+    var trechos = [], atual = null, pontos = '';
+    barras.forEach(function (x, i) {
+      if (!x.n) { atual = null; return; }
+      var p = (cx(i)).toFixed(1) + ',' + y(100 * x.c / x.n).toFixed(1);
+      if (!atual) { atual = []; trechos.push(atual); }
+      atual.push(p);
+      pontos += '<circle class="ponto" cx="' + cx(i).toFixed(1) + '" cy="' + y(100 * x.c / x.n).toFixed(1) + '" r="4"/>';
+    });
+    var linhas = trechos.filter(function (t) { return t.length > 1; }).map(function (t) { return '<polyline class="linha-acerto" points="' + t.join(' ') + '"/>'; }).join('');
+    var ref = media != null ? '<line class="ref-l" x1="' + esq + '" x2="' + (W - dir) + '" y1="' + y(media).toFixed(1) + '" y2="' + y(media).toFixed(1) + '"/>' : '';
+    var cada = Math.max(1, Math.ceil((D.semanal ? 64 : 46) / banda)), rot = '';
+    barras.forEach(function (x, i) {
+      if ((N - 1 - i) % cada === 0) rot += '<text class="eixo" x="' + cx(i).toFixed(1) + '" y="' + (base + 17) + '" text-anchor="middle">' + rotuloBarra(x, D.semanal, i === N - 1) + '</text>';
+    });
+    box.innerHTML = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" tabindex="0" role="img" aria-label="Percentual de acerto por ' + (D.semanal ? 'semana' : 'dia') + '. Use as setas para percorrer.">' +
+      g + '<line class="base-l" x1="' + esq + '" x2="' + (W - dir) + '" y1="' + base + '" y2="' + base + '"/>' + ref + linhas + pontos + rot +
+      '<line class="mira" x1="0" x2="0" y1="' + topo + '" y2="' + base + '" visibility="hidden"/></svg><div class="dica" hidden></div>';
+    var mira = box.querySelector('.mira');
+    ligarDica(box, barras, D.semanal, esq, banda, function (i) {
+      if (i < 0) { mira.setAttribute('visibility', 'hidden'); return; }
+      mira.setAttribute('x1', cx(i).toFixed(1)); mira.setAttribute('x2', cx(i).toFixed(1)); mira.setAttribute('visibility', 'visible');
+    });
+  }
+
+  function telaDesempenho() {
+    pararTimers(); sessao = null; tela = 'desempenho';
+    var D = dadosDesempenho(periodoDesemp), dias = D.dias;
+    var ativos = dias.filter(function (x) { return x.n > 0; });
+    var tot = { n: 0, c: 0, e: 0, b: 0 }, porTema = {};
+    ativos.forEach(function (x) {
+      tot.n += x.n; tot.c += x.c; tot.e += x.e; tot.b += x.b;
+      if (x.t) Object.keys(x.t).forEach(function (id) { var v = porTema[id] || (porTema[id] = [0, 0, 0]); v[0] += x.t[id][0]; v[1] += x.t[id][1]; v[2] += x.t[id][2]; });
+    });
+    var media = tot.n ? pct(tot.c, tot.n) : null;
+    var melhor = ativos.slice().sort(function (a, b) { return (b.c - b.e) - (a.c - a.e) || b.n - a.n; })[0];
+    var metaBatida = P.cfg.meta ? ativos.filter(function (x) { return x.n >= P.cfg.meta; }).length : 0;
+    var periodos = [[7, '7 dias'], [14, '14 dias'], [30, '30 dias'], [90, '90 dias'], ['tudo', 'Tudo']];
+    var filtros = periodos.map(function (p) {
+      return '<button type="button" class="per' + (p[0] === periodoDesemp ? ' ativo' : '') + '" data-per="' + p[0] + '" aria-pressed="' + (p[0] === periodoDesemp) + '">' + p[1] + '</button>';
+    }).join('');
+
+    var kpis = '<div class="kpis">' +
+      '<div class="kpi"><span class="rot">Dias de treino</span><strong>' + ativos.length + '</strong><small>de ' + dias.length + ' no período' + (P.cfg.meta ? ' · meta batida em ' + metaBatida : '') + '</small></div>' +
+      '<div class="kpi"><span class="rot">Itens</span><strong>' + fmtN(tot.n) + '</strong><small>' + (ativos.length ? fmtN(tot.n / ativos.length) + ' por dia de treino' : 'nenhum no período') + '</small></div>' +
+      '<div class="kpi c"><span class="rot">Acerto</span><strong>' + (media == null ? '—' : media + '%') + '</strong><small>' + tot.c + ' certas · ' + tot.e + ' erradas · ' + tot.b + ' em branco</small></div>' +
+      '<div class="kpi"><span class="rot">Nota líquida</span><strong>' + sinal(tot.c - tot.e) + '</strong><small>certas menos erradas (Cebraspe)</small></div></div>';
+
+    var linhas = ativos.slice().reverse().map(function (x) {
+      var temas = x.t ? Object.keys(x.t).sort(function (a, b) { return x.t[b][0] - x.t[a][0]; }) : [];
+      var tTxt = temas.length ? esc(nomeTema[temas[0]] || temas[0]) + ' (' + x.t[temas[0]][0] + ')' + (temas.length > 1 ? ' <span class="mais">+' + (temas.length - 1) + '</span>' : '') : '';
+      var tTit = temas.map(function (id) { return (nomeTema[id] || id) + ': ' + x.t[id][0]; }).join(' · ');
+      return '<tr><td>' + SEMANA[x.data.getDay()] + ' ' + ddmm(x.data) + (P.cfg.meta && x.n >= P.cfg.meta ? ' <span class="meta-ok" title="Meta do dia batida">' + ic('check') + '</span>' : '') + '</td>' +
+        '<td class="num">' + x.n + '</td><td class="num">' + x.c + '</td><td class="num">' + x.e + '</td><td class="num">' + x.b + '</td>' +
+        '<td class="num">' + pct(x.c, x.n) + '%</td><td class="num">' + sinal(x.c - x.e) + '</td><td class="num">' + fmtN(x.xp) + '</td>' +
+        '<td class="col-temas" title="' + esc(tTit) + '">' + (tTxt || '—') + '</td></tr>';
+    }).join('');
+
+    var temasLinhas = Object.keys(porTema).sort(function (a, b) { return porTema[b][0] - porTema[a][0]; }).map(function (id) {
+      var v = porTema[id];
+      return '<tr><td>' + esc(nomeTema[id] || id) + '</td><td class="num">' + v[0] + '</td><td class="num">' + pct(v[1], v[0]) + '%</td><td class="num">' + sinal(v[1] - v[2]) + '</td></tr>';
+    }).join('');
+
+    app.innerHTML = '<div class="topo-tela"><button class="btn sec" id="btn-voltar">' + ic('voltar') + 'Canteiro</button><span class="rot">Registro de ' + Object.keys(P.dias).filter(function (k) { return P.dias[k].n > 0; }).length + ' dias de treino</span></div>' +
+      '<h2>Desempenho diário</h2>' +
+      '<div class="periodos" role="group" aria-label="Período">' + filtros + '</div>' +
+      kpis +
+      (melhor ? '<p class="intro">Melhor dia do período: <b>' + SEMANA[melhor.data.getDay()] + ' ' + ddmm(melhor.data) + '</b>, com ' + melhor.n + ' itens, ' + pct(melhor.c, melhor.n) + '% de acerto e nota líquida ' + sinal(melhor.c - melhor.e) + '.</p>' : '') +
+      '<section class="cartao"><span class="rot">Itens respondidos por ' + (D.semanal ? 'semana' : 'dia') + '</span>' +
+        '<div class="legenda"><span><i class="sw-c"></i>Certas</span><span><i class="sw-e"></i>Erradas</span><span><i class="sw-b"></i>Em branco</span>' + (!D.semanal && P.cfg.meta ? '<span><i class="sw-meta"></i>Meta diária (' + P.cfg.meta + ')</span>' : '') + '</div>' +
+        '<div class="grafico-box" id="g-itens"></div></section>' +
+      '<section class="cartao"><span class="rot">Acerto por ' + (D.semanal ? 'semana' : 'dia') + ' (certas ÷ respondidas)</span>' +
+        (media != null ? '<div class="legenda"><span><i class="sw-linha"></i>Acerto</span><span><i class="sw-ref"></i>Média do período (' + media + '%)</span></div>' : '') +
+        '<div class="grafico-box" id="g-acerto"></div></section>' +
+      (temasLinhas ? '<section class="bloco"><h2 class="secao">Por tema no período</h2><div class="tabela-wrap"><table><thead><tr><th>Tema</th><th class="num">Itens</th><th class="num">Acerto</th><th class="num">Líquida</th></tr></thead><tbody>' + temasLinhas + '</tbody></table></div></section>' : '') +
+      '<section class="bloco"><h2 class="secao">Registro dia a dia</h2>' +
+        (linhas
+          ? '<div class="tabela-wrap"><table class="registro"><thead><tr><th>Dia</th><th class="num">Itens</th><th class="num">Certas</th><th class="num">Erradas</th><th class="num">Branco</th><th class="num">Acerto</th><th class="num">Líquida</th><th class="num">XP</th><th>Tema principal</th></tr></thead><tbody>' + linhas + '</tbody></table></div>'
+          : '<p class="vazio-msg">Nenhum item respondido neste período. Cada resposta entra no registro do dia.</p>') +
+      '</section>' +
+      '<p class="nota-metodo">O registro guarda até 400 dias. Acima de 100 dias, os gráficos agrupam por semana; a tabela continua dia a dia. Toque ou passe o mouse sobre o gráfico para ver os números de cada dia.</p>';
+
+    function desenhar() {
+      var a = document.getElementById('g-itens'), b = document.getElementById('g-acerto');
+      if (!a || !b) return;
+      graficoItens(a, D); graficoAcerto(b, D, media);
+    }
+    desenhar();
+    redesenharDesemp = desenhar;
+    document.getElementById('btn-voltar').addEventListener('click', telaInicio);
+    app.querySelectorAll('[data-per]').forEach(function (b) {
+      b.addEventListener('click', function () { var v = b.getAttribute('data-per'); periodoDesemp = v === 'tudo' ? 'tudo' : +v; telaDesempenho(); });
+    });
+    teclaAtual = function () { return false; };
+    window.scrollTo(0, 0);
+  }
+  var tRedim = null;
+  window.addEventListener('resize', function () {
+    if (tela !== 'desempenho' || !redesenharDesemp) return;
+    clearTimeout(tRedim); tRedim = setTimeout(function () { if (tela === 'desempenho') redesenharDesemp(); }, 150);
+  });
 
   /* ================= conquistas ================= */
   function telaConquistas() {

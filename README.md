@@ -66,3 +66,11 @@ No mesmo arquivo, 36 itens do caderno do cargo 1 (Processo Legislativo e Gestão
 - **19 itens da Câmara dos Deputados 2003** (Engenharia Civil, itens 21–40), com gabarito oficial definitivo. O item 27 ficou de fora porque o gabarito oficial aceita uma equivalência de vocabulário discutível. As outras provas anexadas não têm Língua Inglesa.
 - **28 itens inéditos** no estilo Cebraspe, com três textos originais (BIM em obras públicas, dados abertos no Legislativo e manutenção de infraestrutura). O gabarito desses itens não é oficial.
 - O banco passa a ter 1.002 itens.
+
+### Desempenho diário
+O botão **Desempenho diário**, ao lado de Conquistas, abre o registro do treino dia a dia:
+- **Período:** 7, 14, 30 ou 90 dias, ou todo o histórico. Acima de 100 dias, os gráficos agrupam por semana.
+- **Indicadores:** dias de treino, itens, acerto e nota líquida (certas − erradas), além do melhor dia.
+- **Gráficos:** itens por dia (certas, erradas e em branco, com a meta diária) e percentual de acerto por dia (com a média do período). Ao tocar ou passar o mouse, aparecem os números do dia; as setas do teclado percorrem os dias.
+- **Tabelas:** desempenho por tema no período e registro dia a dia (itens, certas, erradas, branco, acerto, líquida, XP e tema principal).
+- **Dados:** cada resposta grava no dia a divisão por tema e o XP ganho. O histórico guarda até 400 dias (antes eram 120). Dias anteriores a esta versão aparecem com os totais; a divisão por tema é reconstruída a partir das últimas respostas guardadas.
