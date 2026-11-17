@@ -60,3 +60,9 @@ No mesmo arquivo, 36 itens do caderno do cargo 1 (Processo Legislativo e Gestão
 - TI e dados (Teams, navegação, nuvem, segurança, IA e ciência de dados): 13 itens (168–180).
 - Ficaram de fora: Código de Ética, teoria política, atualidades, gestão organizacional, hardware, Windows, orçamento e os itens de procedimento regimental fora dos artigos que o edital cobra.
 - Saíram mais 4 inéditos repetidos (NBC05, NBC06, NBC32 e NBT21). O banco passa a ter 955 itens.
+
+### Língua Inglesa (complemento)
+`js/questoes-ingles.js` leva o tema de 33 para 80 itens, no nível dos demais temas básicos:
+- **19 itens da Câmara dos Deputados 2003** (Engenharia Civil, itens 21–40), com gabarito oficial definitivo. O item 27 ficou de fora porque o gabarito oficial aceita uma equivalência de vocabulário discutível. As outras provas anexadas não têm Língua Inglesa.
+- **28 itens inéditos** no estilo Cebraspe, com três textos originais (BIM em obras públicas, dados abertos no Legislativo e manutenção de infraestrutura). O gabarito desses itens não é oficial.
+- O banco passa a ter 1.002 itens.
