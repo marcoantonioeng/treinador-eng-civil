@@ -865,9 +865,9 @@
   function painelCopia() {
     var corpo = '';
     if (copiaAberta === 'exportar') {
-      corpo = '<p>Guarde o arquivo baixado ou copie o código abaixo. No outro aparelho, abra Ajustes, toque em <b>Importar progresso</b> e escolha o arquivo ou cole o código.</p>' +
+      corpo = '<p>' + (window.claude ? 'Copie o código abaixo.' : 'Baixe o arquivo ou copie o código abaixo.') + ' No outro aparelho, abra Ajustes, toque em <b>Importar progresso</b> e escolha o arquivo ou cole o código.</p>' +
         '<textarea id="copia-txt" readonly rows="4" aria-label="Código do progresso">' + esc(JSON.stringify(P)) + '</textarea>' +
-        '<div class="copia-acoes"><button class="btn-mini" id="copia-copiar">Copiar código</button><button class="btn-mini" id="copia-baixar">Baixar arquivo</button><button class="btn-mini" id="copia-fechar">Fechar</button></div>';
+        '<div class="copia-acoes"><button class="btn-mini" id="copia-copiar">Copiar código</button>' + (window.claude ? '' : '<button class="btn-mini" id="copia-baixar">Baixar arquivo</button>') + '<button class="btn-mini" id="copia-fechar">Fechar</button></div>';
     } else if (copiaAberta === 'importar') {
       corpo = '<p>Escolha o arquivo de progresso ou cole o código exportado. O progresso deste aparelho (' + txtRespostas(P) + ') será <b>substituído</b>.</p>' +
         '<input type="file" id="copia-arq" accept=".json,application/json,text/plain">' +
