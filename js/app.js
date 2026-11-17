@@ -22,7 +22,7 @@
   var nomeTema = {}, porId = {};
   TEMAS.forEach(function (t) { nomeTema[t.id] = t.nome; });
   QUESTOES.forEach(function (q) { porId[q.id] = q; });
-  var SIGLA = { estruturas: 'EST', fundacoes: 'FUN', materiais: 'MAT', execucao: 'EXE', hidro: 'HID', complementares: 'COM', orcamento: 'ORÇ', manutencao: 'MAN', fiscalizacao: 'FIS' };
+  var SIGLA = { estruturas: 'EST', fundacoes: 'FUN', materiais: 'MAT', execucao: 'EXE', hidro: 'HID', complementares: 'COM', orcamento: 'ORÇ', manutencao: 'MAN', fiscalizacao: 'FIS', portugues: 'POR', ingles: 'ING', administrativo: 'ADM', constitucional: 'CON', ti: 'TIN' };
   var reduzMov = false;
   try { reduzMov = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { /* ignora */ }
 
@@ -84,7 +84,7 @@
   var TOTAL_FASES = 0;
   TEMAS.forEach(function (t) {
     var qs = embaralharSeed(QUESTOES.filter(function (q) { return q.tema === t.id; }), hashStr('fases-' + t.id));
-    var nF = Math.max(1, Math.round(qs.length / 5));
+    var nF = Math.min(14, Math.max(1, Math.round(qs.length / 5))); // até 14 andares por prédio
     var base = Math.floor(qs.length / nF), resto = qs.length % nF, p = 0, fases = [];
     for (var i = 0; i < nF; i++) { var tam = base + (i < resto ? 1 : 0); fases.push(qs.slice(p, p + tam)); p += tam; }
     FASES[t.id] = fases;
@@ -634,9 +634,11 @@
   function proxFase(tema) { return P.jogo.estrelas[tema].indexOf(0); } // -1 = todas concluídas
   function estrelasTotais() { var s = 0; TEMAS.forEach(function (t) { P.jogo.estrelas[t.id].forEach(function (e) { s += e; }); }); return s; }
   function skyline() {
-    var col = 40, andarH = 14, W = TEMAS.length * col + 8, base = 10 * andarH + 22, H = base + 18, s = '';
+    var col = 40, andarH = 14, lacuna = 16, maxAndares = 10, s = '';
+    TEMAS.forEach(function (t) { maxAndares = Math.max(maxAndares, P.jogo.estrelas[t.id].length); });
+    var W = TEMAS.length * col + 8 + lacuna, base = maxAndares * andarH + 22, H = base + 18;
     TEMAS.forEach(function (t, i) {
-      var est = P.jogo.estrelas[t.id], n = est.length, larg = 26 + (i % 3) * 3, cx = 4 + i * col + col / 2, x = cx - larg / 2, prox = proxFase(t.id);
+      var est = P.jogo.estrelas[t.id], n = est.length, larg = 26 + (i % 3) * 3, cx = 4 + i * col + col / 2 + (t.grupo === 'basico' ? lacuna : 0), x = cx - larg / 2, prox = proxFase(t.id);
       var feitas = est.filter(function (e) { return e > 0; }).length, g = '';
       for (var f = 0; f < n; f++) {
         var y = base - (f + 1) * andarH;
@@ -753,12 +755,14 @@
       return '<div class="missao' + (feita ? ' feita' : '') + '"><span>' + (feita ? ic('check') + ' ' : '') + esc(m.txt) + ' <span class="dado" style="font-size:12.5px">' + v + '/' + m.meta + '</span></span>' +
         '<span class="premio">' + (feita ? 'recebido' : '+' + m.xp + ' XP') + '</span><div class="trilho"><i style="width:' + pct(v, m.meta) + '%"></i></div></div>';
     }).join('');
-    var temas = stats.map(function (s) {
+    function btnTema(s) {
       var est = P.jogo.estrelas[s.t.id], n = est.length, feitas = est.filter(function (e) { return e > 0; }).length, soma = est.reduce(function (a, b) { return a + b; }, 0);
       return '<button class="tema' + (feitas === n ? ' completo' : '') + '" data-tema="' + s.t.id + '"><span class="nome">' + esc(s.t.nome) + '</span>' +
         '<span class="trilho"><i style="width:' + pct(soma, n * 3) + '%"></i></span>' +
         '<span class="linha2"><span>' + feitas + '/' + n + ' fases · ' + soma + '★</span><span class="st ' + s.estado[0] + '">' + s.estado[1] + '</span></span></button>';
-    }).join('');
+    }
+    var temas = stats.filter(function (s) { return s.t.grupo !== 'basico'; }).map(btnTema).join('');
+    var temasBasicos = stats.filter(function (s) { return s.t.grupo === 'basico'; }).map(btnTema).join('');
     var des = P.jogo.dia.desafio, nConq = Object.keys(P.jogo.conquistas).length;
     var discFeitas = P.disc.length;
     var discMedia = discFeitas ? P.disc.reduce(function (a, d) { return a + d.total / d.max; }, 0) / discFeitas : 0;
@@ -792,6 +796,7 @@
       '</section>' +
       '<section class="bloco"><span class="rot">Missões de hoje · ' + esc(ofTxt) + '</span><div class="missoes">' + missoes + '</div></section>' +
       '<section class="bloco"><span class="rot">Escolha o tema (edital, item 14.2.4, Cargo 6)</span><div class="temas">' + temas + '</div></section>' +
+      '<section class="bloco"><span class="rot">Conhecimentos Básicos (edital, item 14.2.3)</span><div class="temas">' + temasBasicos + '</div></section>' +
       '<div class="acoes"><button class="btn sec" id="btn-conq">' + ic('medalha') + 'Conquistas ' + nConq + '/' + CONQ.length + '</button></div>' +
       '<details class="ajustes-box" id="ajustes-box"><summary>Ajustes</summary><div class="ajustes">' +
         '<label for="opt-data">Data da prova <input type="date" id="opt-data" value="' + esc(P.cfg.dataProva || '') + '"></label>' +
