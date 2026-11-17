@@ -43,3 +43,12 @@ Para incluir questões, edite `js/questoes.js` (funções `ce(...)` e `me(...)`)
 `js/questoes-basicos.js` acrescenta 137 itens aos temas de Direito Constitucional e Regimento Interno, Direito Administrativo e TI e Dados:
 - **37 itens de provas anexadas**, com gabarito definitivo oficial: Câmara dos Deputados 2003 (21), TRE-BA 2010 (6), TJRO 2012 (3) e TCE-PR 2016 (7).
 - **100 itens inéditos no estilo Cebraspe** sobre os tópicos que essas provas não cobrem: Regimento Interno da Câmara, Regimento Comum, Lei 9.784, improbidade (Lei 14.230), governança (Decreto 9.203), LAI, LGPD, Microsoft 365, IA e visualização de dados. O gabarito desses itens não é oficial.
+
+### Câmara dos Deputados 2025 · Conhecimentos Gerais (gabarito oficial)
+`js/questoes-camara2025.js` traz 78 itens reais da prova da Câmara 2025 (Cebraspe, aplicada em 8/3/2026), com o gabarito definitivo depois dos recursos:
+- Língua Portuguesa: 25 itens (1–26; o 25 foi anulado).
+- Língua Inglesa: 9 itens (27–36; o 30 foi anulado).
+- Direito Administrativo e Administração Pública: 44 itens (47–90).
+- Raciocínio lógico (37–46) ficou de fora: não consta do edital do cargo 6.
+- Saíram 4 inéditos que repetiam esses assuntos (NBA09, NBA16, NBA17 e NBA21). O banco passa a ter 923 itens.
+- Os itens de Regimento Interno estão no caderno de Conhecimentos Específicos, cujo gabarito ainda não foi incorporado.
