@@ -1,5 +1,5 @@
 /* Treinador Engenharia Civil — service worker: guarda o app no aparelho para funcionar sem internet. */
-var VERSAO = 'treinador-8857ee3c6f';
+var VERSAO = 'treinador-2f26419511';
 var ARQUIVOS = ['./', './index.html', './manifest.webmanifest', './icones/icone-192.png', './icones/icone-512.png',
   './icones/icone-maskable-512.png', './icones/apple-touch-icon.png', './icones/favicon-32.png'];
 
@@ -27,8 +27,9 @@ self.addEventListener('fetch', function (ev) {
   }
   if (url.origin !== self.location.origin) return;
   // A página: tenta a rede primeiro (para receber atualizações) e cai na cópia guardada sem internet.
+  // no-cache: confere com o servidor em vez de usar a cópia do navegador, que o GitHub Pages deixa valer 10 min.
   if (req.mode === 'navigate') {
-    ev.respondWith(fetch(req).then(function (r) {
+    ev.respondWith(fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(function (r) {
       var copia = r.clone(); caches.open(VERSAO).then(function (c) { c.put('./index.html', copia); });
       return r;
     }).catch(function () { return caches.match('./index.html'); }));

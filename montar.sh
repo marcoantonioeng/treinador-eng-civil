@@ -20,7 +20,7 @@ case "${1:-}" in
       echo "<link rel=\"stylesheet\" href=\"$FONTES\">"
       corpo; } > "$2" ;;
   celular)
-    VERSAO=$(cat css/estilo.css js/*.js celular/manifest.webmanifest sw.tpl.js | sha1sum | cut -c1-10)
+    VERSAO=$(cat css/*.css js/*.js celular/manifest.webmanifest sw.tpl.js montar.sh | sha1sum | cut -c1-10)
     { echo '<!doctype html>'
       echo '<html lang="pt-BR"><head><meta charset="utf-8">'
       echo '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
@@ -39,7 +39,7 @@ case "${1:-}" in
       echo "<link rel=\"stylesheet\" href=\"$FONTES\">"
       echo '</head><body>'
       corpo
-      echo "<script>if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) { window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); }); }</script>"
+      echo '<script>'; cat js/atualizacao-app.js; echo '</script>'
       echo '</body></html>'; } > celular/index.html
     sed "s/__VERSAO__/$VERSAO/" sw.tpl.js > celular/sw.js
     echo "celular/ montado (versão $VERSAO)" ;;
