@@ -10,7 +10,7 @@ corpo() {
   echo '<main class="pagina" id="app"></main>'
   echo '<div id="toasts" aria-live="polite"></div>'
   echo '<canvas id="confete" aria-hidden="true"></canvas>'
-  for f in questoes questoes-basicos questoes-camara2025 questoes-ingles discursivas app; do echo '<script>'; cat "js/$f.js"; echo '</script>'; done
+  for f in questoes questoes-basicos questoes-camara2025 questoes-ingles ajustes-leitura discursivas app; do echo '<script>'; cat "js/$f.js"; echo '</script>'; done
 }
 case "${1:-}" in
   artefato)

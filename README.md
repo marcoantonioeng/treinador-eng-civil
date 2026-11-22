@@ -90,3 +90,12 @@ A pasta `celular/` é o mesmo treinador como aplicativo instalável:
 **Instalar:**
 - Android: abra o endereço no Chrome → menu ⋮ → **Instalar app** (ou Adicionar à tela inicial).
 - iPhone: abra no Safari → Compartilhar → **Adicionar à Tela de Início**.
+
+## Tempo de leitura das questões
+Cada questão deve ser lida em até 30 segundos, sobrando ao menos 30 dos 60 segundos para responder. A medida usada é de até 100 palavras, somando comando, texto de apoio, enunciado e alternativas (leitura atenta de prova, cerca de 200 palavras por minuto). `node testes/tempo-leitura.js` confere o banco e falha se alguma questão passar do limite.
+
+Em 22/11/2026, 217 questões passavam do limite. `js/ajustes-leitura.js` corrige todas sem mexer nos arquivos de origem:
+- **Texto reduzido ao trecho necessário** (195 itens de Português, Inglês e situações-problema). A questão e o gabarito continuam os mesmos; a fonte ganha “(adaptada)” e as referências como “segundo parágrafo” viram “no trecho”. Outros 24 itens que encostavam no limite tiveram o comando encurtado.
+- **Múltipla escolha com cinco alternativas longas virou Certo/Errado** (21 itens), a partir de uma alternativa oficial: a correta vira item Certo, uma incorreta vira item Errado. O id ganha a letra da alternativa (por exemplo, `TJ26E`).
+- **Questão nova sobre o mesmo ponto** (1 item, `BMPGO3R`), porque a original dependia do texto inteiro.
+- Resultado: 1.002 questões, a maior com 95 palavras e a mediana com 49.
