@@ -43,5 +43,19 @@ case "${1:-}" in
       echo '</body></html>'; } > celular/index.html
     sed "s/__VERSAO__/$VERSAO/" sw.tpl.js > celular/sw.js
     echo "celular/ montado (versão $VERSAO)" ;;
-  *) echo "uso: $0 artefato <saida.html> | $0 celular" >&2; exit 1 ;;
+  apk)
+    # Página embutida no APK (android/): fontes locais, ponte com o Android e versão do app.
+    VNOME=$(sed -n "s/.*versionName '\(.*\)'.*/\1/p" android/app/build.gradle)
+    { echo '<!doctype html>'
+      echo '<html lang="pt-BR"><head><meta charset="utf-8">'
+      echo '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
+      echo '<title>Treinador Engenharia Civil</title>'
+      echo '<style>'; cat android/fontes.css; echo '</style>'
+      echo "<script>window.APP_VERSAO = '$VNOME';</script>"
+      echo '<script>'; cat js/ponte-android.js; echo '</script>'
+      echo '</head><body>'
+      corpo
+      echo '</body></html>'; } > android/app/src/main/assets/index.html
+    echo "android/app/src/main/assets/index.html montado (versão $VNOME)" ;;
+  *) echo "uso: $0 artefato <saida.html> | $0 celular | $0 apk" >&2; exit 1 ;;
 esac

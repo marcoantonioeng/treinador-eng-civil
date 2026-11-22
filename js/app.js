@@ -257,11 +257,12 @@
     P = remoto;
     try { localStorage.setItem('treinador-prog', JSON.stringify(P)); } catch (e) { /* ignora */ }
   }
-  var instalado = false;
-  try { instalado = !!((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone); } catch (e) { /* ignora */ }
+  var instalado = !!window.AndroidApp; // no APK, a ponte Android já indica app instalado
+  try { instalado = instalado || !!((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone); } catch (e) { /* ignora */ }
   function textoSync() {
     if (armaz.aviso) return armaz.aviso;
-    return armaz.modo === 'conta' ? 'Progresso salvo na sua conta' : instalado ? 'Progresso salvo neste aparelho' : 'Progresso salvo neste navegador';
+    var t = armaz.modo === 'conta' ? 'Progresso salvo na sua conta' : instalado ? 'Progresso salvo neste aparelho' : 'Progresso salvo neste navegador';
+    return window.APP_VERSAO ? t + ' · versão ' + window.APP_VERSAO : t; // APP_VERSAO só existe no APK
   }
   function atualizarSync() {
     var el = document.getElementById('sync');

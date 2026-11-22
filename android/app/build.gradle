@@ -1,0 +1,44 @@
+plugins { id 'com.android.application' }
+
+def ksProps = new Properties()
+def ksFile = rootProject.file('keystore.properties')
+if (ksFile.exists()) ksFile.withInputStream { ksProps.load(it) }
+
+android {
+    namespace 'br.eng.treinador'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'br.eng.treinador.engcivil'
+        minSdk 26
+        targetSdk 34
+        versionCode 3
+        versionName '1.2'
+    }
+
+    signingConfigs {
+        release {
+            if (ksFile.exists()) {
+                storeFile rootProject.file(ksProps['storeFile'])
+                storePassword ksProps['storePassword']
+                keyAlias ksProps['keyAlias']
+                keyPassword ksProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig ksFile.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // o HTML e as fontes já vêm comprimidos o bastante; não recomprimir woff2
+    androidResources { noCompress 'woff2' }
+}

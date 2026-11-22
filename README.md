@@ -99,3 +99,19 @@ Em 22/11/2026, 217 questões passavam do limite. `js/ajustes-leitura.js` corrige
 - **Múltipla escolha com cinco alternativas longas virou Certo/Errado** (20 itens, mais 1 que encostava no limite), a partir de uma alternativa oficial: a correta vira item Certo, uma incorreta vira item Errado. O id ganha a letra da alternativa (por exemplo, `TJ26E`).
 - **Questão nova sobre o mesmo ponto** (1 item, `BMPGO3R`), porque a original dependia do texto inteiro.
 - Resultado: 1.002 questões, a maior com 95 palavras e a mediana com 49.
+
+## APK para Android
+
+O app também é distribuído como APK (pacote `br.eng.treinador.engcivil`), com as questões e as fontes embutidas, funcionando sem internet. O projeto fica em `android/`.
+
+- Baixar a versão atual: https://marcoantonioeng.github.io/treinador-eng-civil/TreinadorEngCivil.apk
+- Versão 1.2 (22/11/2026): questões legíveis em até 30 s, tema Marfim & Latão e versão exibida em Ajustes.
+
+Para gerar uma versão nova:
+
+1. Aumente `versionCode` e `versionName` em `android/app/build.gradle`.
+2. Rode `./montar.sh apk` (monta `android/app/src/main/assets/index.html` com a ponte `js/ponte-android.js`).
+3. Em `android/`, crie `local.properties` (`sdk.dir=…`) e `keystore.properties` apontando para a chave, e rode `gradle assembleRelease`.
+4. Copie o APK para `celular/TreinadorEngCivil.apk` e publique.
+
+A chave de assinatura **não** fica no repositório. Sem a mesma chave, a versão nova não instala por cima da anterior. A 1.2 usa uma chave nova; a chave da 1.0/1.1 se perdeu, por isso a troca da 1.1 para a 1.2 exige exportar o progresso, desinstalar e importar.

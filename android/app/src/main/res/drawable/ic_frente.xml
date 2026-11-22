@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Canteiro: três prédios sobre o terreno, janelas acesas em dourado. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#EEEAE2" android:pathData="M30,58h14v22h-14z M47,34h15v46h-15z M65,47h13v33h-13z M26,80h56v3h-56z" />
+    <path android:fillColor="#D6B46C" android:pathData="
+        M50,38h3.5v4h-3.5z M55.5,38h3.5v4h-3.5z
+        M50,45h3.5v4h-3.5z M55.5,45h3.5v4h-3.5z
+        M50,52h3.5v4h-3.5z M55.5,52h3.5v4h-3.5z
+        M50,59h3.5v4h-3.5z M55.5,59h3.5v4h-3.5z
+        M50,66h3.5v4h-3.5z M55.5,66h3.5v4h-3.5z
+        M33,62h3v4h-3z M38,62h3v4h-3z M33,69h3v4h-3z M38,69h3v4h-3z
+        M68,51h3v4h-3z M72.5,51h3v4h-3z M68,58h3v4h-3z M72.5,58h3v4h-3z M68,65h3v4h-3z M72.5,65h3v4h-3z
+        M54.5,25l1.2,3.6h3.8l-3.1,2.2l1.2,3.6l-3.1,-2.2l-3.1,2.2l1.2,-3.6l-3.1,-2.2h3.8z" />
+</vector>
