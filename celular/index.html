@@ -4,8 +4,8 @@
 <title>Treinador Engenharia Civil</title>
 <meta name="description" content="Treino de questões Cebraspe para Analista Legislativo – Engenharia Civil da Câmara dos Deputados.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#e8eef6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b2140" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F2ED" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101318" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Treinador">
@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Inter:wght@400..700&display=swap">
 </head><body>
 <style>
 /* Conceito: o canteiro desenhado em prancha. Cada tema do edital é um prédio que sobe andar por andar;
@@ -551,6 +551,241 @@ th.num { font-family: var(--f-titulo); }
 .copia-acoes { display: flex; flex-wrap: wrap; gap: 8px; }
 .copia-msg { font-family: var(--f-dado); font-size: 12.5px; color: var(--certo); }
 .copia-msg.erro { color: var(--errado); }
+</style>
+<style>
+/* ==========================================================================
+   Tema "Opção A": Marfim & Latão (claro) / Grafite & Latão (escuro).
+   Camada aplicada por cima do estilo original; segue o tema do celular.
+   ========================================================================== */
+:root {
+  --fundo: #F4F2ED; --grade: transparent; --folha: #FFFFFF; --tinta: #1A1D22; --tinta-2: #5E6570;
+  --linha: #E6E1D7; --linha-forte: #CFC8BA; --azul: #3E5574; --azul-suave: #E9EDF2;
+  --ouro: #D6B46C; --ouro-esc: #B08A3A; --sobre-ouro: #1A1407; --laranja: #B4632A; --laranja-suave: #F6E9DE;
+  --certo: #155E4B; --certo-suave: #E2F2EC; --errado: #B4532F; --errado-suave: #F7E6DF; --neutro-suave: #EFEBE3;
+  --g-certo: #2E8C71; --g-errado: #D98468; --g-branco: #B9B2A4; --sombra: rgba(26, 29, 34, .12);
+  --f-titulo: "Fraunces", Georgia, serif;
+  --f-texto: "Inter", system-ui, sans-serif;
+  --f-dado: "Inter", system-ui, sans-serif;
+  --f-ui: "Inter", system-ui, sans-serif;
+  --raio: 20px; --raio-p: 14px;
+  --borda: 1px solid var(--linha);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fundo: #101318; --folha: #181C23; --tinta: #EEEAE2; --tinta-2: #A3ABB6;
+    --linha: #262C35; --linha-forte: #3A424D; --azul: #9DB0C8; --azul-suave: #222A36;
+    --ouro: #D6B46C; --ouro-esc: #A88A45; --sobre-ouro: #1A1407; --laranja: #E3A35F; --laranja-suave: #3A2B1C;
+    --certo: #7DD3B8; --certo-suave: #16302A; --errado: #E0785A; --errado-suave: #3A2420; --neutro-suave: #20252D;
+    --g-certo: #5FB89C; --g-errado: #E0785A; --g-branco: #5E6B7D; --sombra: rgba(0, 0, 0, .45);
+  }
+}
+:root[data-theme="dark"] {
+    --fundo: #101318; --folha: #181C23; --tinta: #EEEAE2; --tinta-2: #A3ABB6;
+    --linha: #262C35; --linha-forte: #3A424D; --azul: #9DB0C8; --azul-suave: #222A36;
+    --ouro: #D6B46C; --ouro-esc: #A88A45; --sobre-ouro: #1A1407; --laranja: #E3A35F; --laranja-suave: #3A2B1C;
+    --certo: #7DD3B8; --certo-suave: #16302A; --errado: #E0785A; --errado-suave: #3A2420; --neutro-suave: #20252D;
+    --g-certo: #5FB89C; --g-errado: #E0785A; --g-branco: #5E6B7D; --sombra: rgba(0, 0, 0, .45);
+}
+
+/* ---------- base ---------- */
+body { background-image: none; font-family: var(--f-texto); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--f-titulo); font-weight: 500; letter-spacing: -.01em; }
+.rot { font-family: var(--f-ui); font-weight: 500; font-size: 11.5px; letter-spacing: .14em; }
+.dado { font-family: var(--f-dado); }
+.pagina { gap: 14px; }
+@media (prefers-reduced-motion: no-preference) {
+  .pagina > * { animation: entra-a .32s cubic-bezier(.2, .8, .2, 1) both; }
+  @keyframes entra-a { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}
+
+/* ---------- botões: pílulas, sem sombra dura ---------- */
+.btn {
+  border: var(--borda); border-radius: 999px; box-shadow: none; background: var(--folha);
+  font-family: var(--f-ui); font-size: 16px; font-weight: 600; letter-spacing: 0; padding: 12px 20px; min-height: 48px;
+  transition: transform .15s ease, background-color .2s ease, opacity .2s ease;
+}
+.btn:active:not(:disabled) { transform: scale(.98); box-shadow: none; }
+.btn.prim { background: var(--ouro); color: var(--sobre-ouro); border-color: transparent; box-shadow: none; }
+.btn.prim:active:not(:disabled) { box-shadow: none; }
+.btn.sec { border: var(--borda); box-shadow: none; }
+.btn.sec:active:not(:disabled) { box-shadow: none; }
+.btn.grande { font-size: 18px; padding: 14px 24px; }
+.btn.cta { align-items: flex-start; text-align: left; padding: 16px 24px; flex-direction: column; }
+.cta-t { font-family: var(--f-titulo); font-size: 28px; font-weight: 600; text-transform: none; letter-spacing: -.01em; }
+.cta-s { font-family: var(--f-ui); font-size: 14px; font-weight: 500; letter-spacing: 0; }
+.btn-link { color: var(--azul); font-family: var(--f-ui); }
+.btn-mini { border: var(--borda); font-family: var(--f-ui); font-size: 13.5px; font-weight: 500; padding: 6px 14px; min-height: 36px; }
+.btn-mini:hover { border-color: var(--linha-forte); background: var(--neutro-suave); }
+
+/* ---------- cartões ---------- */
+.jogador, .hoje, .canteiro, .missoes, .folha, .correcao, .resultado, .kpis, .tabela-wrap, .cartao, .ajustes-box, details.item {
+  border: var(--borda); border-radius: var(--raio); box-shadow: none;
+}
+.jogador { grid-template-columns: 1fr auto; overflow: hidden; }
+.jogador .carreira { padding: 18px 18px 16px; gap: 10px; }
+.jogador h1 { font-size: clamp(26px, 6.5vw, 32px); font-weight: 500; }
+.jogador .marcas { border-left: var(--borda); }
+.marca { padding: 10px 14px; gap: 2px; }
+.marca + .marca { border-left: var(--borda); }
+.marca strong { font-family: var(--f-titulo); font-weight: 500; font-size: 26px; }
+.marca .rot { font-size: 10.5px; letter-spacing: .08em; }
+.barra-xp { height: 6px; border: none; background: var(--neutro-suave); }
+.barra-xp i { border-radius: 999px; }
+.xp-legenda { font-size: 12.5px; }
+
+.hoje > div { padding: 12px 10px; border-right: var(--borda); align-items: center; text-align: center; }
+.hoje .rot { font-size: 10.5px; letter-spacing: .06em; text-transform: none; }
+.hoje strong { font-family: var(--f-titulo); font-weight: 500; font-size: clamp(26px, 7vw, 34px); }
+
+.canteiro { padding: 14px 10px 6px; }
+.canteiro .a1 { fill: var(--g-branco); stroke: none; }
+.canteiro .a3 { fill: var(--tinta); stroke: none; }
+.canteiro .chao { stroke: var(--linha-forte); stroke-width: 1.5; }
+.canteiro .a0 { stroke: var(--linha-forte); }
+
+/* ---------- modos, missões, temas ---------- */
+.modo {
+  border: var(--borda); border-radius: var(--raio-p); box-shadow: none; padding: 12px 14px;
+  transition: transform .15s ease, background-color .2s ease;
+}
+.modo:active:not(:disabled) { transform: scale(.98); box-shadow: none; }
+.modo:hover:not(:disabled) { background: var(--neutro-suave); }
+.modo .nome { font-family: var(--f-ui); font-size: 15.5px; font-weight: 600; }
+.modo .nome .ic { color: var(--ouro-esc); }
+.modo .desc { font-size: 13px; }
+.modo.alerta { border-color: var(--errado); box-shadow: none; }
+.missoes { padding: 4px 16px; }
+.missao { font-size: 14.5px; }
+.missao .trilho, .tema .trilho, .medidor { height: 5px; }
+.missao .trilho i { background: var(--ouro); border-radius: 999px; }
+.tema { border: var(--borda); border-radius: var(--raio-p); padding: 12px 14px; transition: background-color .2s ease, border-color .2s ease; }
+.tema:hover { background: var(--neutro-suave); border-color: var(--linha-forte); }
+.tema .nome { font-family: var(--f-ui); font-size: 14.5px; font-weight: 600; line-height: 1.3; }
+.tema .trilho i { border-radius: 999px; }
+.tema.completo { border-color: var(--ouro); }
+.recomendado { border: var(--borda); border-radius: var(--raio); box-shadow: none; padding: 16px 18px; }
+.recomendado:active { transform: scale(.99); box-shadow: none; }
+.recomendado:hover { background: var(--neutro-suave); }
+.recomendado .nome { font-family: var(--f-titulo); font-weight: 500; font-size: 24px; }
+.recomendado .ir { font-family: var(--f-ui); font-size: 14px; font-weight: 600; background: var(--ouro); color: var(--sobre-ouro); }
+
+/* ---------- andares do tema ---------- */
+.topo-tela h2 { font-weight: 500; }
+.andar { border: var(--borda); border-radius: var(--raio-p); transition: background-color .2s ease; }
+.andar .num { font-family: var(--f-titulo); font-weight: 500; }
+.andar .num small, .andar .info b, .andar .acao { font-family: var(--f-ui); }
+.andar .info b { font-size: 15px; }
+.andar .acao { font-size: 12px; font-weight: 600; letter-spacing: .08em; }
+.andar.atual { border: 1.5px solid var(--ouro); box-shadow: none; }
+.terreo { border-top: 1.5px solid var(--linha-forte); }
+
+/* ---------- partida ---------- */
+.topo-fixo { border-bottom: var(--borda); }
+.hud-sair { border: var(--borda); font-family: var(--f-ui); font-size: 14px; font-weight: 500; min-height: 40px; padding: 6px 14px; }
+.pip { height: 6px; border: none; border-radius: 999px; background: var(--linha); }
+.pip.c { background: var(--g-certo); } .pip.e { background: var(--g-errado); } .pip.b { background: var(--g-branco); }
+.pip.atual { border: none; background: var(--tinta); }
+.vidas { color: var(--errado); }
+.combo { font-family: var(--f-ui); font-size: 13.5px; font-weight: 600; border: var(--borda); padding: 4px 12px; }
+.combo.quente { border-color: transparent; }
+.hud .pontos { font-family: var(--f-titulo); font-weight: 500; font-size: 22px; }
+.hud .pontos small { font-family: var(--f-ui); font-size: 11px; }
+.escala-topo .seg { font-family: var(--f-ui); font-weight: 500; font-size: 20px; font-variant-numeric: tabular-nums; }
+.escala .cheio { fill: var(--ouro); }
+.escala .vazio { fill: var(--neutro-suave); stroke: none; }
+
+.folha { padding: 18px clamp(16px, 4vw, 24px) 20px; gap: 14px; }
+.folha .fonte { font-size: 12px; }
+.contexto { background: none; border-left: none; padding: 0; font-size: 14.5px; color: var(--tinta-2); line-height: 1.55; }
+.enunciado { font-family: var(--f-titulo); font-size: 20px; line-height: 1.45; font-weight: 400; }
+
+.btn-resp {
+  border: var(--borda); border-radius: 18px; box-shadow: none; min-height: 58px; padding: 14px 10px;
+  font-family: var(--f-ui); font-size: 17px; font-weight: 600; letter-spacing: 0; text-transform: none;
+  transition: transform .15s ease, background-color .2s ease, border-color .2s ease;
+}
+.btn-resp:active:not(:disabled) { transform: scale(.98); box-shadow: none; }
+.btn-resp:hover:not(:disabled) { background: var(--neutro-suave); }
+.btn-resp:disabled { box-shadow: none; border-color: var(--linha); }
+.btn-resp.escolhida { outline: 2px solid var(--tinta-2); outline-offset: 2px; }
+.btn-resp.gab { border: 2px solid var(--certo); box-shadow: none; }
+.opcao { border: var(--borda); border-radius: var(--raio-p); font-size: 15.5px; transition: background-color .2s ease; }
+.opcao .letra { font-family: var(--f-ui); font-weight: 600; border: 1px solid var(--linha-forte); font-size: 13px; }
+.opcao:hover:not(:disabled) { background: var(--neutro-suave); border-color: var(--linha-forte); }
+.opcao.escolhida { outline: 2px solid var(--tinta-2); }
+.opcao.gab { border-color: var(--certo); }
+.btn-branco { font-family: var(--f-ui); font-size: 14px; color: var(--tinta-2); }
+.seg-ctl { border: var(--borda); }
+.seg-ctl button { font-family: var(--f-ui); font-size: 13.5px; min-height: 36px; }
+.seg-ctl button + button { border-left: var(--borda); }
+
+/* ---------- correção ---------- */
+.correcao { overflow: hidden; }
+.correcao .veredito { border-bottom: none; padding: 16px 18px 4px; background: none !important; }
+.correcao .veredito h2 { font-family: var(--f-titulo); font-weight: 500; font-size: 26px; }
+.correcao.ok { border-color: var(--certo); }
+.correcao.erro { border-color: var(--errado); }
+.ganho { font-family: var(--f-ui); font-size: 14px; font-weight: 600; border: none; padding: 4px 12px; }
+.ganho small { font-size: 11px; letter-spacing: .04em; }
+.correcao .gabarito { font-family: var(--f-ui); font-size: 12.5px; padding: 6px 18px 0; }
+.correcao .just { padding: 8px 18px 12px; font-size: 15.5px; line-height: 1.6; }
+.correcao .acoes { padding: 0 18px 18px; }
+.agenda { margin: 0 18px 14px; border-top: var(--borda); font-family: var(--f-ui); font-size: 12.5px; }
+
+/* ---------- resultado ---------- */
+.resultado { padding: 24px clamp(16px, 4vw, 28px) 26px; }
+.resultado h2 { font-weight: 500; }
+.estrelonas svg.on { color: var(--ouro); stroke: var(--ouro-esc); }
+.placarzao { font-family: var(--f-titulo); font-weight: 500; }
+.placarzao small { font-family: var(--f-ui); font-size: 14px; }
+.recorde { font-family: var(--f-ui); }
+.ganhos div { border-bottom: var(--borda); }
+.ganhos span:last-child { font-family: var(--f-ui); font-variant-numeric: tabular-nums; }
+.promo { font-family: var(--f-titulo); font-weight: 500; font-size: 20px; border: none; border-radius: 999px; padding: 6px 18px; }
+.feito { font-family: var(--f-ui); font-size: 13.5px; font-weight: 500; border: 1px solid var(--ouro); padding: 4px 12px; }
+
+/* ---------- painel, tabelas, conquistas ---------- */
+.kpi { border-right: var(--borda); padding: 12px 14px; }
+.kpi strong { font-family: var(--f-titulo); font-weight: 500; }
+h2.secao { font-weight: 500; font-size: 24px; }
+th, th.num { font-family: var(--f-ui); font-weight: 500; font-size: 11px; letter-spacing: .1em; }
+th, td { border-bottom: var(--borda); }
+.barra { height: 6px; }
+.cartao { padding: 16px 18px; }
+.cartao .grande { font-family: var(--f-titulo); font-weight: 500; font-size: 28px; }
+.cartao .veredito-chute { border-left: none; border-radius: var(--raio-p); padding: 10px 12px; }
+.conq { border: 1px dashed var(--linha-forte); border-radius: var(--raio-p); }
+.conq b { font-family: var(--f-ui); font-size: 15px; font-weight: 600; }
+.conq.tem { border: 1px solid var(--ouro); }
+.conq .selo { border-width: 1.5px; }
+.st { font-family: var(--f-ui); font-size: 11px; font-weight: 500; }
+.chip { font-family: var(--f-ui); }
+.ajustes-box > summary { font-family: var(--f-ui); font-size: 15px; font-weight: 600; padding: 14px 16px; }
+.ajustes input[type=date], .ajustes input[type=number], .nota-q select { font-family: var(--f-ui); border-radius: 10px; border: var(--borda); padding: 6px 8px; }
+.ajustes input[type=checkbox] { accent-color: var(--ouro-esc); }
+.periodos .per { font-family: var(--f-ui); font-size: 13.5px; font-weight: 500; border: var(--borda); }
+.grafico-box .dica { border: var(--borda); border-radius: var(--raio-p); font-family: var(--f-ui); }
+.grafico-box .dica b { font-family: var(--f-ui); font-weight: 600; }
+.copia textarea { border-radius: 12px; border: var(--borda); font-family: ui-monospace, monospace; }
+textarea { border: var(--borda); border-radius: 12px; font-family: var(--f-texto); }
+.quesito-av h3 { font-weight: 500; }
+
+/* ---------- avisos ---------- */
+.toast { font-family: var(--f-ui); font-size: 15px; font-weight: 500; padding: 10px 18px 10px 14px; }
+.toast small { font-family: var(--f-ui); }
+
+.jogador .carreira > .rot { font-size: 10px; letter-spacing: .08em; line-height: 1.45; }
+.marca { min-width: 60px; padding: 10px 10px; }
+/* ---------- foco visível ---------- */
+button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--ouro-esc); outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  body { font-size: 15.5px; }
+  .enunciado { font-size: 19px; }
+  .btn-resp { font-size: 16px; }
+}
 </style>
 <main class="pagina" id="app"></main>
 <div id="toasts" aria-live="polite"></div>

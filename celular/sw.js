@@ -1,5 +1,5 @@
 /* Treinador Engenharia Civil — service worker: guarda o app no aparelho para funcionar sem internet. */
-var VERSAO = 'treinador-129fc7f470';
+var VERSAO = 'treinador-8857ee3c6f';
 var ARQUIVOS = ['./', './index.html', './manifest.webmanifest', './icones/icone-192.png', './icones/icone-512.png',
   './icones/icone-maskable-512.png', './icones/apple-touch-icon.png', './icones/favicon-32.png'];
 

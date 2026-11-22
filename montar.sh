@@ -4,9 +4,10 @@
 #   ./montar.sh celular                 → aplicativo instalável (PWA) em celular/
 set -euo pipefail
 cd "$(dirname "$0")"
-FONTES='https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap'
+FONTES='https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Inter:wght@400..700&display=swap'
 corpo() {
   echo '<style>'; cat css/estilo.css; echo '</style>'
+  echo '<style>'; cat css/tema-marfim.css; echo '</style>'
   echo '<main class="pagina" id="app"></main>'
   echo '<div id="toasts" aria-live="polite"></div>'
   echo '<canvas id="confete" aria-hidden="true"></canvas>'
@@ -26,8 +27,8 @@ case "${1:-}" in
       echo '<title>Treinador Engenharia Civil</title>'
       echo '<meta name="description" content="Treino de questões Cebraspe para Analista Legislativo – Engenharia Civil da Câmara dos Deputados.">'
       echo '<link rel="manifest" href="manifest.webmanifest">'
-      echo '<meta name="theme-color" content="#e8eef6" media="(prefers-color-scheme: light)">'
-      echo '<meta name="theme-color" content="#0b2140" media="(prefers-color-scheme: dark)">'
+      echo '<meta name="theme-color" content="#F4F2ED" media="(prefers-color-scheme: light)">'
+      echo '<meta name="theme-color" content="#101318" media="(prefers-color-scheme: dark)">'
       echo '<meta name="mobile-web-app-capable" content="yes">'
       echo '<meta name="apple-mobile-web-app-capable" content="yes">'
       echo '<meta name="apple-mobile-web-app-title" content="Treinador">'
